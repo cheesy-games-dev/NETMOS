@@ -87,8 +87,8 @@ namespace BIMOS
         private void Update()
         {
             //Check all of the inputs
-            OnTrigger();
-            OnGrip();
+            //OnTrigger();
+            //OnGrip();
 #if UNITY_WEBGL
             GetWebInputs();
 #endif

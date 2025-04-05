@@ -7,10 +7,15 @@ namespace BIMOS
         public bool IsLeftHand;
 
         [SerializeField]
+        private Animator _animator;
+
+        [SerializeField]
         private HandInputReader _handInputReader;
 
         [SerializeField]
-        private Transform _hand, _handTarget;
+        private Transform _handTarget;
+
+        private Transform _hand;
 
         public HandPose DefaultHandPose, HandPose;
 
@@ -38,6 +43,48 @@ namespace BIMOS
             MiddleCurl,
             RingCurl,
             LittleCurl;
+
+        private void Awake()
+        {
+            if (IsLeftHand)
+            {
+                _hand = _animator.GetBoneTransform(HumanBodyBones.LeftHand);
+                Thumb[0] = _animator.GetBoneTransform(HumanBodyBones.LeftThumbProximal);
+                Thumb[1] = _animator.GetBoneTransform(HumanBodyBones.LeftThumbIntermediate);
+                Thumb[2] = _animator.GetBoneTransform(HumanBodyBones.LeftThumbDistal);
+                Index[0] = _animator.GetBoneTransform(HumanBodyBones.LeftIndexProximal);
+                Index[1] = _animator.GetBoneTransform(HumanBodyBones.LeftIndexIntermediate);
+                Index[2] = _animator.GetBoneTransform(HumanBodyBones.LeftIndexDistal);
+                Middle[0] = _animator.GetBoneTransform(HumanBodyBones.LeftMiddleProximal);
+                Middle[1] = _animator.GetBoneTransform(HumanBodyBones.LeftMiddleIntermediate);
+                Middle[2] = _animator.GetBoneTransform(HumanBodyBones.LeftMiddleDistal);
+                Ring[0] = _animator.GetBoneTransform(HumanBodyBones.LeftRingProximal);
+                Ring[1] = _animator.GetBoneTransform(HumanBodyBones.LeftRingIntermediate);
+                Ring[2] = _animator.GetBoneTransform(HumanBodyBones.LeftRingDistal);
+                Little[0] = _animator.GetBoneTransform(HumanBodyBones.LeftLittleProximal);
+                Little[1] = _animator.GetBoneTransform(HumanBodyBones.LeftLittleIntermediate);
+                Little[2] = _animator.GetBoneTransform(HumanBodyBones.LeftLittleDistal);
+            }
+            else
+            {
+                _hand = _animator.GetBoneTransform(HumanBodyBones.RightHand);
+                Thumb[0] = _animator.GetBoneTransform(HumanBodyBones.RightThumbProximal);
+                Thumb[1] = _animator.GetBoneTransform(HumanBodyBones.RightThumbIntermediate);
+                Thumb[2] = _animator.GetBoneTransform(HumanBodyBones.RightThumbDistal);
+                Index[0] = _animator.GetBoneTransform(HumanBodyBones.RightIndexProximal);
+                Index[1] = _animator.GetBoneTransform(HumanBodyBones.RightIndexIntermediate);
+                Index[2] = _animator.GetBoneTransform(HumanBodyBones.RightIndexDistal);
+                Middle[0] = _animator.GetBoneTransform(HumanBodyBones.RightMiddleProximal);
+                Middle[1] = _animator.GetBoneTransform(HumanBodyBones.RightMiddleIntermediate);
+                Middle[2] = _animator.GetBoneTransform(HumanBodyBones.RightMiddleDistal);
+                Ring[0] = _animator.GetBoneTransform(HumanBodyBones.RightRingProximal);
+                Ring[1] = _animator.GetBoneTransform(HumanBodyBones.RightRingIntermediate);
+                Ring[2] = _animator.GetBoneTransform(HumanBodyBones.RightRingDistal);
+                Little[0] = _animator.GetBoneTransform(HumanBodyBones.RightLittleProximal);
+                Little[1] = _animator.GetBoneTransform(HumanBodyBones.RightLittleIntermediate);
+                Little[2] = _animator.GetBoneTransform(HumanBodyBones.RightLittleDistal);
+            }
+        }
 
         private void Update()
         {

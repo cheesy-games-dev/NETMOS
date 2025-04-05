@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace BIMOS
 {
-    public class Hips : MonoBehaviour
+    public class Crouching : MonoBehaviour
     {
         private Player _player;
 

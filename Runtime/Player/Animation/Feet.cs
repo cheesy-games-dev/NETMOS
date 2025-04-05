@@ -26,8 +26,8 @@ namespace BIMOS
 
         private void Start()
         {
-            _leftFoot = new Foot(_player.AnimationRig.LeftFootAnchorTransform, _player.AnimationRig.LeftFootTargetTransform, -0.08f);
-            _rightFoot = new Foot(_player.AnimationRig.RightFootAnchorTransform, _player.AnimationRig.RightFootTargetTransform, 0.08f);
+            _leftFoot = new Foot(_player.AnimationRig.Transforms.LeftFootAnchor, _player.AnimationRig.Transforms.LeftFootTarget, -0.08f);
+            _rightFoot = new Foot(_player.AnimationRig.Transforms.RightFootAnchor, _player.AnimationRig.Transforms.RightFootTarget, 0.08f);
             _currentFoot = _rightFoot;
             _pelvisRigidbody = _player.PhysicsRig.PelvisRigidbody;
             _mask = ~LayerMask.GetMask("BIMOSRig");
@@ -78,21 +78,21 @@ namespace BIMOS
 
         private void UpdateTarget(Foot foot)
         {
-            foot.Target.position = _player.AnimationRig.HipsTransform.position + _pelvisVelocity * _stepTime + _player.AnimationRig.CharacterTransform.right * foot.Offset;
+            foot.Target.position = _player.AnimationRig.Transforms.Hips.position + _pelvisVelocity * _stepTime + _player.AnimationRig.Transforms.Character.right * foot.Offset;
             RaycastHit hit;
             if (Physics.Raycast(foot.Target.position, Vector3.down, out hit, 1.25f, _mask, QueryTriggerInteraction.Ignore) && _player.PhysicsRig.LocomotionSphere.IsGrounded)
             {
                 foot.IsGrounded = true;
                 foot.Target.position = hit.point;
-                foot.Target.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(_player.AnimationRig.CharacterTransform.forward, hit.normal), hit.normal);
+                foot.Target.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(_player.AnimationRig.Transforms.Character.forward, hit.normal), hit.normal);
             }
             else
             {
-                Vector3 target = Vector3.ProjectOnPlane(_player.AnimationRig.HipsTransform.position, Vector3.up);
+                Vector3 target = Vector3.ProjectOnPlane(_player.AnimationRig.Transforms.Hips.position, Vector3.up);
                 target += Vector3.up * (_player.PhysicsRig.LocomotionSphereRigidbody.transform.position.y - 0.2f);
-                target += _pelvisVelocity * _stepTime + _player.AnimationRig.CharacterTransform.right * foot.Offset;
+                target += _pelvisVelocity * _stepTime + _player.AnimationRig.Transforms.Character.right * foot.Offset;
                 foot.Target.position = target;
-                foot.Target.rotation = Quaternion.LookRotation(_player.AnimationRig.CharacterTransform.forward);
+                foot.Target.rotation = Quaternion.LookRotation(_player.AnimationRig.Transforms.Character.forward);
             }
         }
 

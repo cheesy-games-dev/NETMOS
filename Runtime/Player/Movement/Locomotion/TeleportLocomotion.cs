@@ -147,7 +147,7 @@ namespace BIMOS
                 _lineRenderer.enabled = false;
 
                 //Update the animation rig's position
-                _player.AnimationRig.HipsTransform.position += _teleportFeetTransform.position - rootPosition;
+                _player.AnimationRig.Transforms.Hips.position += _teleportFeetTransform.position - rootPosition;
 
                 //Move the player's animated feet to the new position
                 _player.AnimationRig.Feet.TeleportFeet();

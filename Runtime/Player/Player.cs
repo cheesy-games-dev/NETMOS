@@ -17,6 +17,7 @@ namespace BIMOS
         public float SmoothTurnSpeed = 5f; //The speed that he player smooth turns at
         public float SnapTurnIncrement = 45f; //The number of degrees the player will snap-turn
         public float HeadsetStandingHeight = 1.65f; //The headset's default height above the floor
+        public float AvatarEyeHeight = 1.65f; //The headset's default height above the floor
         public float FloorOffset = 0f; //The offset from the tracking floor to the real floor
 
         private void Awake()
@@ -43,7 +44,7 @@ namespace BIMOS
 
         public void ScaleCharacter()
         {
-            float scaleFactor = 1.65f / HeadsetStandingHeight; //1.65 is eye height of character model
+            float scaleFactor = AvatarEyeHeight / HeadsetStandingHeight;
             ControllerRig.transform.localScale = Vector3.one * scaleFactor;
         }
     }
