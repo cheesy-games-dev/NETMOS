@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -8,8 +9,13 @@ namespace BIMOS
     // Monolithic class - I'm so sorry
     public class HandPoseEditor : EditorWindow
     {
+        public Object DummyHandPrefab;
+
         [SerializeField]
-        private GameObject _dummyHandPrefab, _mirrorPrefab;
+        private GameObject _mirrorPrefab;
+
+        [SerializeField]
+        private AnimatorController _controller;
 
         private Vector2 _scrollPosition = Vector2.zero;
         private GameObject _dummyHand, _mirror;
@@ -92,17 +98,18 @@ namespace BIMOS
         {
             _isAnimatorInitialized = false;
             DestroyImmediate(_dummyHand);
-            _dummyHand = Instantiate(_dummyHandPrefab, spawnLocation, spawnRotation);
+            _dummyHand = Instantiate((GameObject) DummyHandPrefab, spawnLocation, spawnRotation);
             _dummyHand.name = "DummyHand";
             _subPose = subPoses.Idle;
 
             _animator = _dummyHand.GetComponent<Animator>();
             _armature = _animator.avatarRoot;
+            _animator.runtimeAnimatorController = _controller;
 
             foreach (SkinnedMeshRenderer renderer in _dummyHand.GetComponentsInChildren<SkinnedMeshRenderer>())
                 renderer.updateWhenOffscreen = true;
 
-            BoneRenderer boneRenderer = _dummyHand.GetComponent<BoneRenderer>();
+            BoneRenderer boneRenderer = _dummyHand.AddComponent<BoneRenderer>();
             List<Transform> bones = new();
             GetBones(_animator.GetBoneTransform(HumanBodyBones.RightHand), bones);
 
@@ -169,6 +176,8 @@ namespace BIMOS
             _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, GUIStyle.none);
 
             //All the controls for the editor
+            GUILayout.Label("Hand Prefab");
+            DummyHandPrefab = EditorGUILayout.ObjectField(DummyHandPrefab, typeof(GameObject), true);
             if (GUILayout.Button("Select"))
             {
                 _currentSelection = Selection.activeTransform;
