@@ -19,12 +19,21 @@ namespace BIMOS
 
         public HandPose DefaultHandPose, HandPose;
 
+        [HideInInspector]
         public Transform[]
             Thumb,
             Index,
             Middle,
             Ring,
             Little;
+
+        [HideInInspector]
+        public Quaternion[]
+            ThumbRot,
+            IndexRot,
+            MiddleRot,
+            RingRot,
+            LittleRot;
 
         public thumbSubPoses ThumbPose = thumbSubPoses.Idle;
         public enum thumbSubPoses
@@ -46,6 +55,16 @@ namespace BIMOS
 
         private void Awake()
         {
+            Thumb = new Transform[3];
+            Index = new Transform[3];
+            Middle = new Transform[3];
+            Ring = new Transform[3];
+            Little = new Transform[3];
+            ThumbRot = new Quaternion[3];
+            IndexRot = new Quaternion[3];
+            MiddleRot = new Quaternion[3];
+            RingRot = new Quaternion[3];
+            LittleRot = new Quaternion[3];
             if (IsLeftHand)
             {
                 _hand = _animator.GetBoneTransform(HumanBodyBones.LeftHand);
@@ -84,17 +103,29 @@ namespace BIMOS
                 Little[1] = _animator.GetBoneTransform(HumanBodyBones.RightLittleIntermediate);
                 Little[2] = _animator.GetBoneTransform(HumanBodyBones.RightLittleDistal);
             }
-        }
 
-        private void Update()
-        {
-            UpdateCurls();
-            UpdateHand();
+            ThumbRot[0] = Quaternion.identity;
+            ThumbRot[1] = Quaternion.identity;
+            ThumbRot[2] = Quaternion.identity;
+            IndexRot[0] = Quaternion.identity;
+            IndexRot[1] = Quaternion.identity;
+            IndexRot[2] = Quaternion.identity;
+            MiddleRot[0] = Quaternion.identity;
+            MiddleRot[1] = Quaternion.identity;
+            MiddleRot[2] = Quaternion.identity;
+            RingRot[0] = Quaternion.identity;
+            RingRot[1] = Quaternion.identity;
+            RingRot[2] = Quaternion.identity;
+            LittleRot[0] = Quaternion.identity;
+            LittleRot[1] = Quaternion.identity;
+            LittleRot[2] = Quaternion.identity;
         }
 
         private void LateUpdate()
         {
             _hand.SetPositionAndRotation(_handTarget.position, _handTarget.rotation);
+            UpdateCurls();
+            UpdateHand();
         }
 
         private void UpdateCurls()
@@ -140,48 +171,44 @@ namespace BIMOS
             switch (ThumbPose)
             {
                 case thumbSubPoses.Idle:
-                    UpdateFinger(Thumb, 1, HandPose.Thumb.Idle, HandPose.Thumb.Idle);
+                    UpdateFinger(Thumb, ThumbRot, 1, HandPose.Thumb.Idle, HandPose.Thumb.Idle);
                     break;
                 case thumbSubPoses.ThumbrestTouched:
-                    UpdateFinger(Thumb, 1, HandPose.Thumb.ThumbrestTouched, HandPose.Thumb.ThumbrestTouched);
+                    UpdateFinger(Thumb, ThumbRot, 1, HandPose.Thumb.ThumbrestTouched, HandPose.Thumb.ThumbrestTouched);
                     break;
                 case thumbSubPoses.PrimaryTouched:
-                    UpdateFinger(Thumb, 1, HandPose.Thumb.PrimaryTouched, HandPose.Thumb.PrimaryTouched);
+                    UpdateFinger(Thumb, ThumbRot, 1, HandPose.Thumb.PrimaryTouched, HandPose.Thumb.PrimaryTouched);
                     break;
                 case thumbSubPoses.PrimaryButton:
-                    UpdateFinger(Thumb, 1, HandPose.Thumb.PrimaryButton, HandPose.Thumb.PrimaryButton);
+                    UpdateFinger(Thumb, ThumbRot, 1, HandPose.Thumb.PrimaryButton, HandPose.Thumb.PrimaryButton);
                     break;
                 case thumbSubPoses.SecondaryTouched:
-                    UpdateFinger(Thumb, 1, HandPose.Thumb.SecondaryTouched, HandPose.Thumb.SecondaryTouched);
+                    UpdateFinger(Thumb, ThumbRot, 1, HandPose.Thumb.SecondaryTouched, HandPose.Thumb.SecondaryTouched);
                     break;
                 case thumbSubPoses.SecondaryButton:
-                    UpdateFinger(Thumb, 1, HandPose.Thumb.SecondaryButton, HandPose.Thumb.SecondaryButton);
+                    UpdateFinger(Thumb, ThumbRot, 1, HandPose.Thumb.SecondaryButton, HandPose.Thumb.SecondaryButton);
                     break;
                 case thumbSubPoses.ThumbstickTouched:
-                    UpdateFinger(Thumb, 1, HandPose.Thumb.ThumbstickTouched, HandPose.Thumb.ThumbstickTouched);
+                    UpdateFinger(Thumb, ThumbRot, 1, HandPose.Thumb.ThumbstickTouched, HandPose.Thumb.ThumbstickTouched);
                     break;
             }
 
             if (IsIndexOnTrigger)
             {
-                UpdateFinger(Index, IndexCurl, HandPose.Index.TriggerTouched, HandPose.Index.Closed);
+                UpdateFinger(Index, IndexRot, IndexCurl, HandPose.Index.TriggerTouched, HandPose.Index.Closed);
             }
             else
             {
-                UpdateFinger(Index, IndexCurl, HandPose.Index.Open, HandPose.Index.Closed);
+                UpdateFinger(Index, IndexRot, IndexCurl, HandPose.Index.Open, HandPose.Index.Closed);
             }
 
-            UpdateFinger(Middle, MiddleCurl, HandPose.Middle.Open, HandPose.Middle.Closed);
-            UpdateFinger(Ring, RingCurl, HandPose.Ring.Open, HandPose.Ring.Closed);
-            UpdateFinger(Little, LittleCurl, HandPose.Little.Open, HandPose.Little.Closed);
+            UpdateFinger(Middle, MiddleRot, MiddleCurl, HandPose.Middle.Open, HandPose.Middle.Closed);
+            UpdateFinger(Ring, RingRot, RingCurl, HandPose.Ring.Open, HandPose.Ring.Closed);
+            UpdateFinger(Little, LittleRot, LittleCurl, HandPose.Little.Open, HandPose.Little.Closed);
         }
 
-        private void UpdateFinger(Transform[] finger, float value, FingerPose open, FingerPose closed)
+        private void UpdateFinger(Transform[] finger, Quaternion[] rots, float value, FingerPose open, FingerPose closed)
         {
-            Transform root = finger[0];
-            Transform middle = finger[1];
-            Transform tip = finger[2];
-
             if (IsLeftHand)
             {
                 open = open.Mirrored();
@@ -189,9 +216,13 @@ namespace BIMOS
             }
 
             //Sets dummy finger bone rotations to those in the fingerPose
-            root.localRotation = Quaternion.Slerp(root.localRotation, Quaternion.Slerp(open.RootBone, closed.RootBone, value), Time.deltaTime * 25f);
-            middle.localRotation = Quaternion.Slerp(middle.localRotation, Quaternion.Slerp(open.MiddleBone, closed.MiddleBone, value), Time.deltaTime * 25f);
-            tip.localRotation = Quaternion.Slerp(tip.localRotation, Quaternion.Slerp(open.TipBone, closed.TipBone, value), Time.deltaTime * 25f);
+            rots[0] = Quaternion.Slerp(rots[0], Quaternion.Slerp(open.RootBone, closed.RootBone, value), Time.deltaTime * 25f); ;
+            rots[1] = Quaternion.Slerp(rots[1], Quaternion.Slerp(open.MiddleBone, closed.MiddleBone, value), Time.deltaTime * 25f); ;
+            rots[2] = Quaternion.Slerp(rots[2], Quaternion.Slerp(open.TipBone, closed.TipBone, value), Time.deltaTime * 25f);
+
+            finger[0].localRotation *= rots[0];
+            finger[1].localRotation *= rots[1];
+            finger[2].localRotation *= rots[2];
         }
     }
 }

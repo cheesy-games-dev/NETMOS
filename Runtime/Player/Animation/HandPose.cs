@@ -8,13 +8,27 @@ namespace BIMOS
     {
         public ThumbPoses Thumb;
         public IndexPoses Index;
-        public FingerPoses Middle, Ring, Little;
+        public FingerPoses
+            Middle,
+            Ring,
+            Little;
     }
 
     [Serializable]
     public struct FingerPose
     {
         public Quaternion RootBone, MiddleBone, TipBone;
+
+        public static FingerPose Default()
+        {
+            FingerPose fingerPose = new()
+            {
+                RootBone = Quaternion.identity,
+                MiddleBone = Quaternion.identity,
+                TipBone = Quaternion.identity
+            };
+            return fingerPose;
+        }
 
         public FingerPose(FingerPose pose)
         {
@@ -27,13 +41,13 @@ namespace BIMOS
         {
             FingerPose mirroredFingerPose = new FingerPose(this);
 
-            mirroredFingerPose.RootBone.x *= -1;
-            mirroredFingerPose.MiddleBone.x *= -1;
-            mirroredFingerPose.TipBone.x *= -1;
+            mirroredFingerPose.RootBone.x *= -1f;
+            mirroredFingerPose.MiddleBone.x *= -1f;
+            mirroredFingerPose.TipBone.x *= -1f;
 
-            mirroredFingerPose.RootBone.w *= -1;
-            mirroredFingerPose.MiddleBone.w *= -1;
-            mirroredFingerPose.TipBone.w *= -1;
+            mirroredFingerPose.RootBone.w *= -1f;
+            mirroredFingerPose.MiddleBone.w *= -1f;
+            mirroredFingerPose.TipBone.w *= -1f;
 
             return mirroredFingerPose;
         }
@@ -43,24 +57,26 @@ namespace BIMOS
     public class ThumbPoses
     {
         public FingerPose
-            Idle,
-            ThumbrestTouched,
-            PrimaryTouched,
-            PrimaryButton,
-            SecondaryTouched,
-            SecondaryButton,
-            ThumbstickTouched;
+            Idle = FingerPose.Default(),
+            ThumbrestTouched = FingerPose.Default(),
+            PrimaryTouched = FingerPose.Default(),
+            PrimaryButton = FingerPose.Default(),
+            SecondaryTouched = FingerPose.Default(),
+            SecondaryButton = FingerPose.Default(),
+            ThumbstickTouched = FingerPose.Default();
     }
 
     [Serializable]
     public class FingerPoses
     {
-        public FingerPose Open, Closed;
+        public FingerPose
+            Open = FingerPose.Default(),
+            Closed = FingerPose.Default();
     }
 
     [Serializable]
     public class IndexPoses : FingerPoses
     {
-        public FingerPose TriggerTouched;
+        public FingerPose TriggerTouched = FingerPose.Default();
     }
 }
