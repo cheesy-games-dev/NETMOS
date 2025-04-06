@@ -1,7 +1,7 @@
-using System.Drawing.Printing;
-using System.IO;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 namespace BIMOS
 {
@@ -102,6 +102,12 @@ namespace BIMOS
             foreach (SkinnedMeshRenderer renderer in _dummyHand.GetComponentsInChildren<SkinnedMeshRenderer>())
                 renderer.updateWhenOffscreen = true;
 
+            BoneRenderer boneRenderer = _dummyHand.GetComponent<BoneRenderer>();
+            List<Transform> bones = new();
+            GetBones(_animator.GetBoneTransform(HumanBodyBones.RightHand), bones);
+
+            boneRenderer.transforms = bones.ToArray();
+
             _armature.localScale = 1f / 1000f * Vector3.one;
             _animator.GetBoneTransform(HumanBodyBones.RightHand).localScale = 1000f * Vector3.one;
 
@@ -144,6 +150,15 @@ namespace BIMOS
             }
 
             HandPoseToDummy(_currentHandPose);
+        }
+
+        private void GetBones(Transform parent, List<Transform> bones)
+        {
+            foreach (Transform bone in parent)
+            {
+                bones.Add(bone);
+                GetBones(bone, bones);
+            }
         }
 
         private void OnGUI()
