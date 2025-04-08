@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+using UnityEngine.XR;
 
 namespace BIMOS
 {
@@ -23,25 +24,21 @@ namespace BIMOS
         private bool _isLeftHand;
 
         private HandData _initialHandData = new HandData(1);
-        private HandData _handData;
         private Animator _animator;
         private bool _isAnimatorInitialized = false;
 
+        private BoneRenderer _selectedBoneRenderer;
+
         HandPose _currentHandPose;
 
-        private enum subPoses
+        private enum SubPose
         {
-            Idle,
-            TriggerTouched,
-            Closed,
-            ThumbrestTouched,
-            PrimaryTouched,
-            PrimaryButton,
-            SecondaryTouched,
-            SecondaryButton,
-            ThumbstickTouched
+            None,
+            GripOpen, GripClosed,
+            IndexOpen, IndexTriggerTouched, IndexClosed,
+            ThumbOpen, ThumbrestTouched, PrimaryTouched, PrimaryButton, SecondaryTouched, SecondaryButton, ThumbstickTouched
         };
-        subPoses _subPose = subPoses.Idle;
+        SubPose _subPose = SubPose.None;
         Object _currentAsset;
 
         [MenuItem("Window/BIMOS/Hand Pose Editor")]
@@ -82,6 +79,15 @@ namespace BIMOS
                         _initialHandData.Little[0] = _animator.GetBoneTransform(HumanBodyBones.RightLittleProximal).localRotation;
                         _initialHandData.Little[1] = _animator.GetBoneTransform(HumanBodyBones.RightLittleIntermediate).localRotation;
                         _initialHandData.Little[2] = _animator.GetBoneTransform(HumanBodyBones.RightLittleDistal).localRotation;
+
+                        _subPose = SubPose.GripClosed;
+                        HandPoseToDummy(_currentHandPose);
+                        _subPose = SubPose.IndexClosed;
+                        HandPoseToDummy(_currentHandPose);
+                        _subPose = SubPose.ThumbrestTouched;
+                        HandPoseToDummy(_currentHandPose);
+                        _subPose = SubPose.None;
+                        HandPoseToDummy(_currentHandPose);
                     }
                 }
             }
@@ -100,7 +106,7 @@ namespace BIMOS
             DestroyImmediate(_dummyHand);
             _dummyHand = Instantiate((GameObject) DummyHandPrefab, spawnLocation, spawnRotation);
             _dummyHand.name = "DummyHand";
-            _subPose = subPoses.Idle;
+            _subPose = SubPose.None;
 
             _animator = _dummyHand.GetComponent<Animator>();
             _armature = _animator.avatarRoot;
@@ -109,11 +115,8 @@ namespace BIMOS
             foreach (SkinnedMeshRenderer renderer in _dummyHand.GetComponentsInChildren<SkinnedMeshRenderer>())
                 renderer.updateWhenOffscreen = true;
 
-            BoneRenderer boneRenderer = _dummyHand.AddComponent<BoneRenderer>();
-            List<Transform> bones = new();
-            GetBones(_animator.GetBoneTransform(HumanBodyBones.RightHand), bones);
-
-            boneRenderer.transforms = bones.ToArray();
+            _selectedBoneRenderer = _dummyHand.AddComponent<BoneRenderer>();
+            _selectedBoneRenderer.boneColor = new Color(1f, 0f, 0f, 0.5f);
 
             _armature.localScale = 1f / 1000f * Vector3.one;
             _animator.GetBoneTransform(HumanBodyBones.RightHand).localScale = 1000f * Vector3.one;
@@ -138,29 +141,38 @@ namespace BIMOS
             _currentHandPose = Instantiate(_currentHandPose);
 
             _dummyHand.transform.parent = null;
-            SnapGrab grab = _currentSelection?.GetComponent<SnapGrab>();
-            if (grab)
-            {
-                _dummyHand.transform.parent = _currentSelection;
+            //if (_currentSelection)
+            //{
+            //    SnapGrab grab = _currentSelection.GetComponent<SnapGrab>();
+            //    if (grab)
+            //    {
+            //        _isLeftHand = grab.IsLeftHanded && !grab.IsRightHanded;
 
-                _isLeftHand = grab.IsLeftHanded && !grab.IsRightHanded;
-
-                _armature.transform.localScale = _isLeftHand ? new Vector3(-1f, 1f, 1f) : new Vector3(1f, 1f, 1f);
-                if (grab.HandPose)
-                {
-                    _currentHandPose = grab.HandPose;
-                    _currentAsset = AssetDatabase.LoadAssetAtPath(AssetDatabase.GetAssetPath(grab.HandPose), typeof(HandPose));
-                    _subPose = subPoses.ThumbstickTouched;
-                    HandPoseToDummy(_currentHandPose);
-                    _subPose = subPoses.Closed;
-                }
-            }
+            //        _dummyHand.transform.localScale = _isLeftHand ? new Vector3(-1f, 1f, 1f) : new Vector3(1f, 1f, 1f);
+            //        if (grab.HandPose)
+            //        {
+            //            _currentHandPose = grab.HandPose;
+            //            _currentAsset = AssetDatabase.LoadAssetAtPath(AssetDatabase.GetAssetPath(grab.HandPose), typeof(HandPose));
+            //            _subPose = SubPose.GripClosed;
+            //            HandPoseToDummy(_currentHandPose);
+            //            _subPose = SubPose.IndexClosed;
+            //            HandPoseToDummy(_currentHandPose);
+            //            _subPose = SubPose.ThumbrestTouched;
+            //            HandPoseToDummy(_currentHandPose);
+            //            _subPose = SubPose.None;
+            //            HandPoseToDummy(_currentHandPose);
+            //        }
+            //    }
+            //}
 
             HandPoseToDummy(_currentHandPose);
         }
 
-        private void GetBones(Transform parent, List<Transform> bones)
+        private void GetBones(Transform parent, List<Transform> bones, bool first = false)
         {
+            if (!first)
+                bones.Add(parent);
+
             foreach (Transform bone in parent)
             {
                 bones.Add(bone);
@@ -170,13 +182,13 @@ namespace BIMOS
 
         private void OnGUI()
         {
-            minSize = new Vector2(154f, 397f);
-            maxSize = minSize + new Vector2(0.1f, 0.1f);
+            minSize = new Vector2(150f, 351f);
+            maxSize = new Vector2(265f, 576f);
 
             _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, GUIStyle.none);
 
             //All the controls for the editor
-            GUILayout.Label("Hand Prefab");
+            GUILayout.Label("Character Model");
             DummyHandPrefab = EditorGUILayout.ObjectField(DummyHandPrefab, typeof(GameObject), true);
             if (GUILayout.Button("Select"))
             {
@@ -211,9 +223,15 @@ namespace BIMOS
                 { //Check that path isn't empty
                     _currentAsset = AssetDatabase.LoadAssetAtPath(path, typeof(HandPose));
                     HandPose handPose = (HandPose)_currentAsset;
-                    _subPose = subPoses.Idle;
-                    HandPoseToDummy(handPose);
                     _currentHandPose = handPose;
+                    _subPose = SubPose.GripClosed;
+                    HandPoseToDummy(_currentHandPose);
+                    _subPose = SubPose.IndexClosed;
+                    HandPoseToDummy(_currentHandPose);
+                    _subPose = SubPose.ThumbrestTouched;
+                    HandPoseToDummy(_currentHandPose);
+                    _subPose = SubPose.None;
+                    HandPoseToDummy(_currentHandPose);
                 }
             }
             if (GUILayout.Button("Save"))
@@ -249,7 +267,7 @@ namespace BIMOS
                 if (GUILayout.Button("Swap to right hand"))
                 {
                     _isLeftHand = false;
-                    _armature.transform.localScale = new Vector3(1f, 1f, 1f);
+                    _dummyHand.transform.localScale = new Vector3(1f, 1f, 1f);
                 }
             }
             else
@@ -257,7 +275,7 @@ namespace BIMOS
                 if (GUILayout.Button("Swap to left hand"))
                 {
                     _isLeftHand = true;
-                    _armature.transform.localScale = new Vector3(-1f, 1f, 1f);
+                    _dummyHand.transform.localScale = new Vector3(-1f, 1f, 1f);
                 }
             }
             if (!_mirror)
@@ -297,58 +315,97 @@ namespace BIMOS
                 }
             }
             GUILayout.Label("Sub-Poses");
+            if (GUILayout.Button("None"))
+            {
+                _currentHandPose = DummyToHandPose();
+                _subPose = SubPose.None;
+                HandPoseToDummy(_currentHandPose);
+            }
+            GUILayout.Label("Little, Ring, Middle");
+            GUI.backgroundColor = _subPose == SubPose.GripOpen ? Color.red : Color.white;
             if (GUILayout.Button("Open"))
             {
                 _currentHandPose = DummyToHandPose();
-                _subPose = subPoses.Idle;
+                _subPose = SubPose.GripOpen;
                 HandPoseToDummy(_currentHandPose);
             }
+            GUI.backgroundColor = _subPose == SubPose.GripClosed ? Color.red : Color.white;
             if (GUILayout.Button("Closed"))
             {
                 _currentHandPose = DummyToHandPose();
-                _subPose = subPoses.Closed;
+                _subPose = SubPose.GripClosed;
                 HandPoseToDummy(_currentHandPose);
             }
+            GUILayout.Label("Index");
+            GUI.backgroundColor = _subPose == SubPose.IndexOpen ? Color.red : Color.white;
+            if (GUILayout.Button("Open"))
+            {
+                _currentHandPose = DummyToHandPose();
+                _subPose = SubPose.IndexOpen;
+                HandPoseToDummy(_currentHandPose);
+            }
+            GUI.backgroundColor = _subPose == SubPose.IndexTriggerTouched ? Color.red : Color.white;
             if (GUILayout.Button("Trigger touched"))
             {
                 _currentHandPose = DummyToHandPose();
-                _subPose = subPoses.TriggerTouched;
+                _subPose = SubPose.IndexTriggerTouched;
                 HandPoseToDummy(_currentHandPose);
             }
+            GUI.backgroundColor = _subPose == SubPose.IndexClosed ? Color.red : Color.white;
+            if (GUILayout.Button("Closed"))
+            {
+                _currentHandPose = DummyToHandPose();
+                _subPose = SubPose.IndexClosed;
+                HandPoseToDummy(_currentHandPose);
+            }
+            GUILayout.Label("Thumb");
+            GUI.backgroundColor = _subPose == SubPose.ThumbOpen ? Color.red : Color.white;
+            if (GUILayout.Button("Open"))
+            {
+                _currentHandPose = DummyToHandPose();
+                _subPose = SubPose.ThumbOpen;
+                HandPoseToDummy(_currentHandPose);
+            }
+            GUI.backgroundColor = _subPose == SubPose.ThumbrestTouched ? Color.red : Color.white;
             if (GUILayout.Button("Thumbrest touched"))
             {
                 _currentHandPose = DummyToHandPose();
-                _subPose = subPoses.ThumbrestTouched;
+                _subPose = SubPose.ThumbrestTouched;
                 HandPoseToDummy(_currentHandPose);
             }
+            GUI.backgroundColor = _subPose == SubPose.ThumbstickTouched ? Color.red : Color.white;
             if (GUILayout.Button("Thumbstick touched"))
             {
                 _currentHandPose = DummyToHandPose();
-                _subPose = subPoses.ThumbstickTouched;
+                _subPose = SubPose.ThumbstickTouched;
                 HandPoseToDummy(_currentHandPose);
             }
+            GUI.backgroundColor = _subPose == SubPose.PrimaryTouched ? Color.red : Color.white;
             if (GUILayout.Button("Primary touched"))
             {
                 _currentHandPose = DummyToHandPose();
-                _subPose = subPoses.PrimaryTouched;
+                _subPose = SubPose.PrimaryTouched;
                 HandPoseToDummy(_currentHandPose);
             }
+            GUI.backgroundColor = _subPose == SubPose.PrimaryButton ? Color.red : Color.white;
             if (GUILayout.Button("Primary button"))
             {
                 _currentHandPose = DummyToHandPose();
-                _subPose = subPoses.PrimaryButton;
+                _subPose = SubPose.PrimaryButton;
                 HandPoseToDummy(_currentHandPose);
             }
+            GUI.backgroundColor = _subPose == SubPose.SecondaryTouched ? Color.red : Color.white;
             if (GUILayout.Button("Secondary touched"))
             {
                 _currentHandPose = DummyToHandPose();
-                _subPose = subPoses.SecondaryTouched;
+                _subPose = SubPose.SecondaryTouched;
                 HandPoseToDummy(_currentHandPose);
             }
+            GUI.backgroundColor = _subPose == SubPose.SecondaryButton ? Color.red : Color.white;
             if (GUILayout.Button("Secondary button"))
             {
                 _currentHandPose = DummyToHandPose();
-                _subPose = subPoses.SecondaryButton;
+                _subPose = SubPose.SecondaryButton;
                 HandPoseToDummy(_currentHandPose);
             }
             GUILayout.EndScrollView();
@@ -384,43 +441,70 @@ namespace BIMOS
 
         private void HandPoseToDummy(HandPose handPose)
         {
+            List<Transform> bones = new();
             switch (_subPose)
             {
-                case subPoses.Idle:
-                    FingerPoseToDummy(handPose.Thumb.Idle, _animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), _initialHandData.Thumb);
-                    FingerPoseToDummy(handPose.Index.Open, _animator.GetBoneTransform(HumanBodyBones.RightIndexProximal), _initialHandData.Index);
+                case SubPose.GripOpen:
                     FingerPoseToDummy(handPose.Middle.Open, _animator.GetBoneTransform(HumanBodyBones.RightMiddleProximal), _initialHandData.Middle);
                     FingerPoseToDummy(handPose.Ring.Open, _animator.GetBoneTransform(HumanBodyBones.RightRingProximal), _initialHandData.Ring);
                     FingerPoseToDummy(handPose.Little.Open, _animator.GetBoneTransform(HumanBodyBones.RightLittleProximal), _initialHandData.Little);
+
+                    GetBones(_animator.GetBoneTransform(HumanBodyBones.RightMiddleProximal), bones);
+                    GetBones(_animator.GetBoneTransform(HumanBodyBones.RightRingProximal), bones);
+                    GetBones(_animator.GetBoneTransform(HumanBodyBones.RightLittleProximal), bones);
                     break;
-                case subPoses.Closed:
-                    FingerPoseToDummy(handPose.Index.Closed, _animator.GetBoneTransform(HumanBodyBones.RightIndexProximal), _initialHandData.Index);
+                case SubPose.GripClosed:
                     FingerPoseToDummy(handPose.Middle.Closed, _animator.GetBoneTransform(HumanBodyBones.RightMiddleProximal), _initialHandData.Middle);
                     FingerPoseToDummy(handPose.Ring.Closed, _animator.GetBoneTransform(HumanBodyBones.RightRingProximal), _initialHandData.Ring);
                     FingerPoseToDummy(handPose.Little.Closed, _animator.GetBoneTransform(HumanBodyBones.RightLittleProximal), _initialHandData.Little);
+
+                    GetBones(_animator.GetBoneTransform(HumanBodyBones.RightMiddleProximal), bones);
+                    GetBones(_animator.GetBoneTransform(HumanBodyBones.RightRingProximal), bones);
+                    GetBones(_animator.GetBoneTransform(HumanBodyBones.RightLittleProximal), bones);
                     break;
-                case subPoses.TriggerTouched:
+                case SubPose.IndexOpen:
+                    FingerPoseToDummy(handPose.Index.Open, _animator.GetBoneTransform(HumanBodyBones.RightIndexProximal), _initialHandData.Index);
+                    GetBones(_animator.GetBoneTransform(HumanBodyBones.RightIndexProximal), bones);
+                    break;
+                case SubPose.IndexTriggerTouched:
                     FingerPoseToDummy(handPose.Index.TriggerTouched, _animator.GetBoneTransform(HumanBodyBones.RightIndexProximal), _initialHandData.Index);
+                    GetBones(_animator.GetBoneTransform(HumanBodyBones.RightIndexProximal), bones);
                     break;
-                case subPoses.ThumbrestTouched:
+                case SubPose.IndexClosed:
+                    FingerPoseToDummy(handPose.Index.Closed, _animator.GetBoneTransform(HumanBodyBones.RightIndexProximal), _initialHandData.Index);
+                    GetBones(_animator.GetBoneTransform(HumanBodyBones.RightIndexProximal), bones);
+                    break;
+                case SubPose.ThumbOpen:
+                    FingerPoseToDummy(handPose.Thumb.Idle, _animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), _initialHandData.Thumb);
+                    GetBones(_animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), bones);
+                    break;
+                case SubPose.ThumbrestTouched:
                     FingerPoseToDummy(handPose.Thumb.ThumbrestTouched, _animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), _initialHandData.Thumb);
+                    GetBones(_animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), bones);
                     break;
-                case subPoses.PrimaryTouched:
+                case SubPose.PrimaryTouched:
                     FingerPoseToDummy(handPose.Thumb.PrimaryTouched, _animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), _initialHandData.Thumb);
+                    GetBones(_animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), bones);
                     break;
-                case subPoses.PrimaryButton:
+                case SubPose.PrimaryButton:
                     FingerPoseToDummy(handPose.Thumb.PrimaryButton, _animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), _initialHandData.Thumb);
+                    GetBones(_animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), bones);
                     break;
-                case subPoses.SecondaryTouched:
+                case SubPose.SecondaryTouched:
                     FingerPoseToDummy(handPose.Thumb.SecondaryTouched, _animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), _initialHandData.Thumb);
+                    GetBones(_animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), bones);
                     break;
-                case subPoses.SecondaryButton:
+                case SubPose.SecondaryButton:
                     FingerPoseToDummy(handPose.Thumb.SecondaryButton, _animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), _initialHandData.Thumb);
+                    GetBones(_animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), bones);
                     break;
-                case subPoses.ThumbstickTouched:
+                case SubPose.ThumbstickTouched:
                     FingerPoseToDummy(handPose.Thumb.ThumbstickTouched, _animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), _initialHandData.Thumb);
+                    GetBones(_animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), bones);
                     break;
             }
+
+            _selectedBoneRenderer.transforms = bones.ToArray();
         }
 
         private void FingerPoseToDummy(FingerPose fingerPose, Transform rootTransform, Quaternion[] initialFingerData)
@@ -442,38 +526,44 @@ namespace BIMOS
 
             switch (_subPose)
             {
-                case subPoses.Idle:
-                    handPose.Thumb.Idle = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), _initialHandData.Thumb);
-                    handPose.Index.Open = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightIndexProximal), _initialHandData.Index);
+                case SubPose.GripOpen:
                     handPose.Middle.Open = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightMiddleProximal), _initialHandData.Middle);
                     handPose.Ring.Open = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightRingProximal), _initialHandData.Ring);
                     handPose.Little.Open = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightLittleProximal), _initialHandData.Little);
                     break;
-                case subPoses.Closed:
-                    handPose.Index.Closed = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightIndexProximal), _initialHandData.Index);
+                case SubPose.GripClosed:
                     handPose.Middle.Closed = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightMiddleProximal), _initialHandData.Middle);
                     handPose.Ring.Closed = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightRingProximal), _initialHandData.Ring);
                     handPose.Little.Closed = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightLittleProximal), _initialHandData.Little);
                     break;
-                case subPoses.TriggerTouched:
+                case SubPose.IndexOpen:
+                    handPose.Index.Open = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightIndexProximal), _initialHandData.Index);
+                    break;
+                case SubPose.IndexTriggerTouched:
                     handPose.Index.TriggerTouched = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightIndexProximal), _initialHandData.Index);
                     break;
-                case subPoses.ThumbrestTouched:
+                case SubPose.IndexClosed:
+                    handPose.Index.Closed = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightIndexProximal), _initialHandData.Index);
+                    break;
+                case SubPose.ThumbOpen:
+                    handPose.Thumb.Idle = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), _initialHandData.Thumb);
+                    break;
+                case SubPose.ThumbrestTouched:
                     handPose.Thumb.ThumbrestTouched = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), _initialHandData.Thumb);
                     break;
-                case subPoses.PrimaryTouched:
+                case SubPose.PrimaryTouched:
                     handPose.Thumb.PrimaryTouched = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), _initialHandData.Thumb);
                     break;
-                case subPoses.PrimaryButton:
+                case SubPose.PrimaryButton:
                     handPose.Thumb.PrimaryButton = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), _initialHandData.Thumb);
                     break;
-                case subPoses.SecondaryTouched:
+                case SubPose.SecondaryTouched:
                     handPose.Thumb.SecondaryTouched = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), _initialHandData.Thumb);
                     break;
-                case subPoses.SecondaryButton:
+                case SubPose.SecondaryButton:
                     handPose.Thumb.SecondaryButton = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), _initialHandData.Thumb);
                     break;
-                case subPoses.ThumbstickTouched:
+                case SubPose.ThumbstickTouched:
                     handPose.Thumb.ThumbstickTouched = DummyToFingerPose(_animator.GetBoneTransform(HumanBodyBones.RightThumbProximal), _initialHandData.Thumb);
                     break;
             }

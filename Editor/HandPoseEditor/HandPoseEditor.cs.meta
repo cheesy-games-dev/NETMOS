@@ -5,7 +5,7 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - m_ViewDataDictionary: {instanceID: 0}
-  - DummyHandPrefab: {fileID: 919132149155446097, guid: 30e0d8e5271d1fd48b3f24b4418405aa, type: 3}
+  - DummyHandPrefab: {fileID: 919132149155446097, guid: 535200017fa23a046bc700958cf4bc08, type: 3}
   - _mirrorPrefab: {fileID: 116947543989098448, guid: 645c522e33a419b43b9d340387c95539, type: 3}
   - _controller: {fileID: 9100000, guid: 2da97de0ee8be8f40b35e2320fb64e53, type: 2}
   executionOrder: 0
