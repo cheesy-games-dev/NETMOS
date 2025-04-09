@@ -3,7 +3,6 @@ using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
-using UnityEngine.XR;
 
 namespace BIMOS
 {

@@ -174,6 +174,7 @@ namespace BIMOS
                     grab.enabled = true;
 
             Attacher.Rigidbody.transform.SetPositionAndRotation(DetachPoint.position, DetachPoint.rotation);
+            Attacher.Rigidbody.linearVelocity += (DetachPoint.position - AttachPoint.position) / _insertTime;
 
             Attacher.Socket = null;
             Attacher = null;

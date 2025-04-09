@@ -1,13 +1,18 @@
 using System;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
-using UnityEngine.UIElements;
 
 namespace BIMOS
 {
     public class AnimationRig : MonoBehaviour
     {
         public Feet Feet;
+
+        [SerializeField]
+        Transform _leftWrist, _rightWrist;
+
+        [SerializeField]
+        Transform _leftPalm, _rightPalm;
 
         public AnimationRigTransforms Transforms;
 
@@ -38,6 +43,41 @@ namespace BIMOS
             _constraints.RightArm.data.mid = _animator.GetBoneTransform(HumanBodyBones.RightLowerArm);
             _constraints.RightArm.data.tip = _animator.GetBoneTransform(HumanBodyBones.RightHand);
 
+            // Hands
+            Transform leftHand = _animator.GetBoneTransform(HumanBodyBones.LeftHand);
+            Transform leftMiddleProximal = _animator.GetBoneTransform(HumanBodyBones.LeftMiddleProximal);
+            GameObject leftPalm = new();
+            leftPalm.transform.SetPositionAndRotation(
+                Vector3.Lerp(leftHand.position, leftMiddleProximal.position, 0.5f),
+                Quaternion.Lerp(leftHand.rotation, leftMiddleProximal.rotation, 0.5f)
+            );
+            _leftWrist.SetLocalPositionAndRotation(
+                leftPalm.transform.InverseTransformPoint(leftHand.position),
+                Quaternion.Inverse(leftPalm.transform.rotation) * leftHand.rotation
+            );
+            _leftPalm.SetLocalPositionAndRotation(
+                leftHand.InverseTransformPoint(leftPalm.transform.position),
+                Quaternion.Inverse(leftHand.rotation) * leftPalm.transform.rotation
+            );
+            Destroy(leftPalm);
+
+            Transform rightHand = _animator.GetBoneTransform(HumanBodyBones.RightHand);
+            Transform rightMiddleProximal = _animator.GetBoneTransform(HumanBodyBones.RightMiddleProximal);
+            GameObject rightPalm = new();
+            rightPalm.transform.SetPositionAndRotation(
+                Vector3.Lerp(rightHand.position, rightMiddleProximal.position, 0.5f),
+                Quaternion.Lerp(rightHand.rotation, rightMiddleProximal.rotation, 0.5f)
+            );
+            _rightWrist.SetLocalPositionAndRotation(
+                rightPalm.transform.InverseTransformPoint(rightHand.position),
+                Quaternion.Inverse(rightPalm.transform.rotation) * rightHand.rotation
+            );
+            _rightPalm.SetLocalPositionAndRotation(
+                rightHand.InverseTransformPoint(rightPalm.transform.position),
+                Quaternion.Inverse(rightHand.rotation) * rightPalm.transform.rotation
+            );
+            Destroy(rightPalm);
+
             // Legs
             _constraints.LeftLeg.data.root = _animator.GetBoneTransform(HumanBodyBones.LeftUpperLeg);
             _constraints.LeftLeg.data.mid = _animator.GetBoneTransform(HumanBodyBones.LeftLowerLeg);
@@ -57,7 +97,7 @@ namespace BIMOS
             _constraints.Head.data.constrainedObject = headBone;
             headBone.localScale = Vector3.zero;
 
-            //// Torso
+            // Torso
             Transforms.Hips = _animator.GetBoneTransform(HumanBodyBones.Hips);
             _constraints.Hip.data.constrainedObject = Transforms.Hips;
 

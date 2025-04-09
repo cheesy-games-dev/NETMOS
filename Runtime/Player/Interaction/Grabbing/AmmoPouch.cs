@@ -6,7 +6,7 @@ namespace BIMOS
     public class AmmoPouch : Grab
     {
         public GameObject MagazinePrefab;
-        private List<GameObject> _spawnedMagazines = new List<GameObject>();
+        private List<GameObject> _spawnedMagazines = new();
 
         public override void OnGrab(Hand hand) //Triggered when player grabs the grab
         {
@@ -25,7 +25,13 @@ namespace BIMOS
                 }
 
             _spawnedMagazines.Add(magazine);
-            if (_spawnedMagazines.Count > 5)
+
+            int ejectedMagazineCount = 0;
+            foreach (GameObject spawnedMagazine in _spawnedMagazines)
+                if (!spawnedMagazine.GetComponentInChildren<Attacher>()?.Socket)
+                    ejectedMagazineCount++;
+
+            if (ejectedMagazineCount > 5)
                 foreach (GameObject spawnedMagazine in _spawnedMagazines)
                     if (!spawnedMagazine.GetComponentInChildren<Attacher>()?.Socket)
                     {
