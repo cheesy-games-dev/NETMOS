@@ -299,7 +299,8 @@ namespace BIMOS
         {
             bool visible = !_player.AnimationRig.Transforms.Character.GetComponentInChildren<SkinnedMeshRenderer>().enabled;
 
-            _player.AnimationRig.Transforms.Character.GetComponentInChildren<SkinnedMeshRenderer>().enabled = visible;
+            foreach (var renderer in _player.AnimationRig.Transforms.Character.GetComponentsInChildren<SkinnedMeshRenderer>())
+                renderer.enabled = visible;
 
             _toggleAnimationDisplay.text = visible ? "Hide animation rig" : "Show animation rig";
         }

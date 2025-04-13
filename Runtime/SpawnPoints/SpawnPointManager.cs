@@ -7,12 +7,6 @@ namespace BIMOS
         public SpawnPoint SpawnPoint;
         public GameObject PlayerInstance;
 
-        [SerializeField]
-        private Vector3 _startGravity = new Vector3(0, -9.81f, 0);
-
-        [SerializeField]
-        private float _startTimeScale = 1f;
-
         [Tooltip("Inserts this prefab in front of player on respawn")]
         public GameObject StarterProp;
 
@@ -22,9 +16,6 @@ namespace BIMOS
 
         private void Awake()
         {
-            SetGravity(_startGravity);
-            SetTimeScale(_startTimeScale);
-
             if (!SpawnPoint)
             {
                 SpawnPoint = FindFirstObjectByType<SpawnPoint>();
@@ -38,62 +29,15 @@ namespace BIMOS
             Respawn();
         }
 
-        public void SetGravity(Vector3 gravity)
-        {
-            Physics.gravity = gravity;
-        }
+        public void SetStarterPropOffsetX(float x) => StarterPropOffset.x = x;
 
-        public void SetGravityX(float x)
-        {
-            Vector3 gravity = Physics.gravity;
-            gravity.x = x;
-            Physics.gravity = gravity;
-        }
+        public void SetStarterPropOffsetY(float y) => StarterPropOffset.y = y;
 
-        public void SetGravityY(float y)
-        {
-            Vector3 gravity = Physics.gravity;
-            gravity.y = y;
-            Physics.gravity = gravity;
-        }
+        public void SetStarterPropOffsetZ(float z) => StarterPropOffset.z = z;
 
-        public void SetGravityZ(float z)
-        {
-            Vector3 gravity = Physics.gravity;
-            gravity.z = z;
-            Physics.gravity = gravity;
-        }
+        public void SetSpawnPoint(SpawnPoint spawnPoint) => SpawnPoint = spawnPoint;
 
-        public void SetStarterPropOffsetX(float x)
-        {
-            StarterPropOffset.x = x;
-        }
-
-        public void SetStarterPropOffsetY(float y)
-        {
-            StarterPropOffset.y = y;
-        }
-
-        public void SetStarterPropOffsetZ(float z)
-        {
-            StarterPropOffset.z = z;
-        }
-
-        public void SetTimeScale(float timeScale)
-        {
-            Time.timeScale = timeScale;
-            Time.fixedDeltaTime = 1f / 144f * timeScale;
-        }
-
-        public void SetSpawnPoint(SpawnPoint spawnPoint)
-        {
-            SpawnPoint = spawnPoint;
-        }
-
-        public void SetStarterProp(GameObject starterProp)
-        {
-            StarterProp = starterProp;
-        }
+        public void SetStarterProp(GameObject starterProp) => StarterProp = starterProp;
 
         public void Respawn()
         {

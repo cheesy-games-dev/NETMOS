@@ -142,8 +142,10 @@ namespace BIMOS
 
             if (_currentSelection && _dummyHand)
             {
-                Vector3 pos = _currentSelection.TransformPoint(_currentHand.Palm.InverseTransformPoint(hand.position));
-                Quaternion rot = _currentSelection.rotation * Quaternion.Inverse(_currentHand.Palm.rotation) * hand.rotation;
+                Transform selection = _currentSelection;
+
+                Vector3 pos = selection.TransformPoint(_currentHand.Palm.InverseTransformPoint(hand.position));
+                Quaternion rot = selection.rotation * Quaternion.Inverse(_currentHand.Palm.rotation) * hand.rotation;
                 _dummyHand.transform.position = pos;
                 hand.transform.position = pos;
                 hand.transform.rotation = rot;
@@ -172,7 +174,7 @@ namespace BIMOS
             _currentHand.InitialData.Thumb[0] = _currentHand.GetBoneTransform(HandBones.ThumbProximal).localRotation;
 
             _selectedBoneRenderer = _dummyHand.AddComponent<BoneRenderer>();
-            _selectedBoneRenderer.boneColor = new Color(1f, 0f, 0f, 0.5f);
+            _selectedBoneRenderer.boneColor = new Color(1f, 1f, 0f, 0.1f);
 
             _armature.localScale = 1f / 1000f * Vector3.one;
 
@@ -332,10 +334,32 @@ namespace BIMOS
                             .Replace("R I G H T", "Right")
                             .Replace("L E F T", "Left");
 
+                        List<Transform> children = new();
                         foreach (Transform child in mirroredGrab.transform)
-                            DestroyImmediate(child.gameObject);
+                            children.Add(child);
 
-                        MirrorGrab(mirroredGrab.GetComponent<Grab>());
+                        foreach (Transform child in children)
+                            child.parent = null;
+
+                        Mirror(mirroredGrab.transform);
+
+                        foreach (Transform child in children)
+                        {
+                            Mirror(child);
+                            child.parent = mirroredGrab.transform;
+                        }
+
+                        Grab snapGrab = mirroredGrab.GetComponent<Grab>();
+                        if (snapGrab.IsLeftHanded)
+                        {
+                            snapGrab.IsLeftHanded = false;
+                            snapGrab.IsRightHanded = true;
+                        }
+                        else if (snapGrab.IsRightHanded)
+                        {
+                            snapGrab.IsRightHanded = false;
+                            snapGrab.IsLeftHanded = true;
+                        }
                     }
 
                     DestroyImmediate(_mirror);
@@ -610,29 +634,17 @@ namespace BIMOS
             _currentAsset = null;
         }
 
-        private void MirrorGrab(Grab snapGrab)
+        private void Mirror(Transform transform)
         {
             //Position
             Plane plane = new Plane(-_mirror.transform.right, _mirror.transform.position);
-            var mirrorPoint = plane.ClosestPointOnPlane(snapGrab.transform.position);
-            snapGrab.transform.position = Vector3.LerpUnclamped(snapGrab.transform.position, mirrorPoint, 2f);
+            var mirrorPoint = plane.ClosestPointOnPlane(transform.position);
+            transform.position = Vector3.LerpUnclamped(transform.position, mirrorPoint, 2f);
 
             //Rotation
-            Vector3 mirroredForwardVector = Vector3.Reflect(snapGrab.transform.forward, plane.normal);
-            Vector3 mirroredUpVector = Vector3.Reflect(snapGrab.transform.up, plane.normal);
-            snapGrab.transform.rotation = Quaternion.LookRotation(mirroredForwardVector, mirroredUpVector);
-
-            //Flipping grab
-            if (snapGrab.IsLeftHanded)
-            {
-                snapGrab.IsLeftHanded = false;
-                snapGrab.IsRightHanded = true;
-            }
-            else if (snapGrab.IsRightHanded)
-            {
-                snapGrab.IsRightHanded = false;
-                snapGrab.IsLeftHanded = true;
-            }
+            Vector3 mirroredForwardVector = Vector3.Reflect(transform.forward, plane.normal);
+            Vector3 mirroredUpVector = Vector3.Reflect(transform.up, plane.normal);
+            transform.rotation = Quaternion.LookRotation(mirroredForwardVector, mirroredUpVector);
         }
     }
     

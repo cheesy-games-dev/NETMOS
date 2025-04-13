@@ -50,6 +50,9 @@ public class PlayerModelChanger : MonoBehaviour
         foreach (Transform child in characterModelChildren)
             child.parent = character;
 
+        foreach (var renderer in character.GetComponentsInChildren<SkinnedMeshRenderer>())
+            renderer.updateWhenOffscreen = true;
+
         DestroyImmediate(characterModel);
     }
 }
