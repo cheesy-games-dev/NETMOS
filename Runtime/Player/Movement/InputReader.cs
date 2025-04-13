@@ -9,6 +9,9 @@ namespace BIMOS
         public Vector2 MoveVector;
         public float CrouchInput, TurnInput;
 
+        [SerializeField]
+        private SmoothLocomotion _smoothLocomotion;
+
         public InputActionReference
             MoveAction,
             RunAction,
@@ -54,7 +57,7 @@ namespace BIMOS
 
         private void OnRun(InputAction.CallbackContext context)
         {
-            BroadcastMessage("Run");
+            _smoothLocomotion.Run();
         }
 
         private void OnCrouchChanged()
@@ -64,12 +67,12 @@ namespace BIMOS
 
         private void OnJumpAnticipate(InputAction.CallbackContext context)
         {
-            BroadcastMessage("AnticipateJump");
+            _smoothLocomotion.AnticipateJump();
         }
 
         private void OnJump(InputAction.CallbackContext context)
         {
-            BroadcastMessage("Jump");
+            _smoothLocomotion.Jump();
         }
 
         private void OnTurn()

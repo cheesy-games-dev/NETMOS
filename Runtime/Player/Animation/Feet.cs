@@ -5,7 +5,7 @@ namespace BIMOS
 {
     public class Feet : MonoBehaviour
     {
-        private Player _player;
+        private BIMOSRig _player;
 
         [SerializeField]
         private AudioClip[] _walkSounds, _runSounds;
@@ -19,13 +19,9 @@ namespace BIMOS
 
         private LayerMask _mask;
 
-        private void Awake()
-        {
-            _player = GetComponentInParent<Player>();
-        }
-
         private void Start()
         {
+            _player = BIMOSRig.Instance;
             _leftFoot = new Foot(_player.AnimationRig.Transforms.LeftFootAnchor, _player.AnimationRig.Transforms.LeftFootTarget, -0.08f);
             _rightFoot = new Foot(_player.AnimationRig.Transforms.RightFootAnchor, _player.AnimationRig.Transforms.RightFootTarget, 0.08f);
             _currentFoot = _rightFoot;

@@ -6,6 +6,9 @@ namespace BIMOS
     {
         public LocomotionSphere LocomotionSphere;
 
+        public float WalkSpeed = 7.5f; //The speed of the player while walking
+        public float RunSpeed = 15f; //The speed of the player while running
+
         public Rigidbody
             LocomotionSphereRigidbody,
             FenderRigidbody,
@@ -36,8 +39,10 @@ namespace BIMOS
         }
         public JumpStates JumpState; //What state of a jump the player is in
 
-        private void Awake()
+        public void Start()
         {
+            Time.fixedDeltaTime = 1f / 144f;
+
             int playerLayer = LayerMask.NameToLayer("BIMOSRig");
             Physics.IgnoreLayerCollision(playerLayer, playerLayer);
 

@@ -8,13 +8,13 @@ namespace BIMOS
         public Vector3 TargetOffsetPosition;
         public Quaternion TargetOffsetRotation;
 
-        private Player _player;
+        private BIMOSRig _player;
 
         private ConfigurableJoint _handJoint;
 
-        private void Awake()
+        private void Start()
         {
-            _player = GetComponentInParent<Player>();
+            _player = BIMOSRig.Instance;
 
             GetComponent<Rigidbody>().solverIterations = 60;
             GetComponent<Rigidbody>().solverVelocityIterations = 10;

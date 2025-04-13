@@ -8,6 +8,8 @@ namespace BIMOS
     {
         public Feet Feet;
 
+        public float AvatarEyeHeight = 1.65f; //The headset's default height above the floor
+
         [SerializeField]
         Transform _leftWrist, _rightWrist;
 
@@ -24,7 +26,7 @@ namespace BIMOS
         private Animator _animator;
         private RigBuilder _rigBuilder;
 
-        private void Awake()
+        public void Start()
         {
             _animator = GetComponentInChildren<Animator>();
             _rigBuilder = GetComponentInChildren<RigBuilder>();

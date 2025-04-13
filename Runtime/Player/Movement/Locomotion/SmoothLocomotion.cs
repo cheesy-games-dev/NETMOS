@@ -4,20 +4,16 @@ namespace BIMOS
 {
     public class SmoothLocomotion : MonoBehaviour
     {
-        private Player _player;
+        private BIMOSRig _player;
 
         private bool _isRunning = false;
         private float _currentSpeed;
         private float _liftoffVelocity = 0f;
 
-        private void Awake()
-        {
-            _player = GetComponentInParent<Player>();
-        }
-
         private void Start() //Resets important variables
         {
-            _currentSpeed = _player.WalkSpeed;
+            _player = BIMOSRig.Instance;
+            _currentSpeed = _player.PhysicsRig.WalkSpeed;
             _player.PhysicsRig.LocomotionSphereRigidbody.maxAngularVelocity = Mathf.Infinity;
             _liftoffVelocity = 0f;
             _player.PhysicsRig.JumpState = PhysicsRig.JumpStates.NotJumping;
@@ -28,7 +24,7 @@ namespace BIMOS
         private void OnDisable() //Reset important variables
         {
             _isRunning = false;
-            _currentSpeed = _player.WalkSpeed;
+            _currentSpeed = _player.PhysicsRig.WalkSpeed;
             _liftoffVelocity = 0f;
             _player.PhysicsRig.JumpState = PhysicsRig.JumpStates.NotJumping;
             _player.PhysicsRig.LocomotionSphereRigidbody.mass = 25f;
@@ -47,13 +43,13 @@ namespace BIMOS
         {
             //Input
             Quaternion headYaw = Quaternion.LookRotation(Vector3.Cross(_player.ControllerRig.CameraTransform.right, Vector3.up)); //Gets player direction
-            Vector3 moveVector = headYaw * new Vector3(_player.InputReader.MoveVector.x, 0f, _player.InputReader.MoveVector.y);
+            Vector3 moveVector = headYaw * new Vector3(_player.ControllerRig.InputReader.MoveVector.x, 0f, _player.ControllerRig.InputReader.MoveVector.y);
 
             //Running
             if (moveVector.magnitude < 0.1f)
                 _isRunning = false;
 
-            _currentSpeed = _isRunning ? _player.RunSpeed : _player.WalkSpeed; //Condensed if-else statement to set currentSpeed
+            _currentSpeed = _isRunning ? _player.PhysicsRig.RunSpeed : _player.PhysicsRig.WalkSpeed; //Condensed if-else statement to set currentSpeed
 
             //Movement
             Vector3 targetAngularVelocity = Quaternion.Euler(0f, 90f, 0f) * moveVector;

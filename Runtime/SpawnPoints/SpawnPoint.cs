@@ -15,7 +15,7 @@ namespace BIMOS
         public GameObject Spawn()
         {
             GameObject player = Instantiate(_playerPrefab, transform.position, Quaternion.identity);
-            player.GetComponent<Player>().ControllerRig.transform.rotation = transform.rotation;
+            player.GetComponent<BIMOSRig>().ControllerRig.transform.rotation = transform.rotation;
             return player;
         }
     }

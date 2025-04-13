@@ -4,11 +4,11 @@ namespace BIMOS
 {
     public class Head : MonoBehaviour
     {
-        private Player _player;
+        private BIMOSRig _player;
 
-        private void Awake()
+        private void Start()
         {
-            _player = GetComponentInParent<Player>();
+            _player = BIMOSRig.Instance;
         }
 
         void Update()

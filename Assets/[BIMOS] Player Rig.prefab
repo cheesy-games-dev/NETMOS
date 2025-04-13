@@ -2311,6 +2311,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LocomotionSphere: {fileID: 6570134477579702792}
+  WalkSpeed: 7.5
+  RunSpeed: 15
   LocomotionSphereRigidbody: {fileID: 8255524940958050785}
   FenderRigidbody: {fileID: 7135177025831188540}
   PelvisRigidbody: {fileID: 1135809102042792036}
@@ -5162,7 +5164,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2771187932956860478}
   - component: {fileID: 6671873013947755651}
-  - component: {fileID: 4161807823607615228}
   - component: {fileID: 2379824094042918529}
   m_Layer: 0
   m_Name: '[BIMOS] Player Rig'
@@ -5204,37 +5205,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c10726e34d95df240bb20ef18e17d122, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InputReader: {fileID: 4161807823607615228}
   ControllerRig: {fileID: 7251668691989030867}
   PhysicsRig: {fileID: 7597220909626976064}
   AnimationRig: {fileID: 5003449384936182098}
-  WalkSpeed: 7.5
-  RunSpeed: 15
-  SmoothTurnSpeed: 10
-  SnapTurnIncrement: 45
-  HeadsetStandingHeight: 1.64
-  AvatarEyeHeight: 1.65
-  FloorOffset: 0
---- !u!114 &4161807823607615228
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3169780607551956412}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 927b63b619dd2634d926312a58c3ba8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MoveVector: {x: 0, y: 0}
-  CrouchInput: 0
-  TurnInput: 0
-  MoveAction: {fileID: 2329931572188812770, guid: 0cd47f68cb724f8478ed745999f9d67a, type: 3}
-  RunAction: {fileID: -6406039945800244612, guid: 0cd47f68cb724f8478ed745999f9d67a, type: 3}
-  CrouchAction: {fileID: -5873772996935874777, guid: 0cd47f68cb724f8478ed745999f9d67a, type: 3}
-  JumpAction: {fileID: -1109987746469713061, guid: 0cd47f68cb724f8478ed745999f9d67a, type: 3}
-  TurnAction: {fileID: -6922838068034798914, guid: 0cd47f68cb724f8478ed745999f9d67a, type: 3}
+  UIRig: {fileID: 0}
 --- !u!114 &2379824094042918529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6757,6 +6731,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5068128423746160875}
   - component: {fileID: 7251668691989030867}
+  - component: {fileID: 2207443908239016413}
   m_Layer: 0
   m_Name: ControllerRig
   m_TagString: Untagged
@@ -6792,12 +6767,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8beffb62625260b41898bae17f13ad1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  InputReader: {fileID: 2207443908239016413}
   CameraOffsetTransform: {fileID: 1663299016445241834}
   CameraTransform: {fileID: 7935699982236817345}
   MenuCameraTransform: {fileID: 7774723414774480165}
   LeftControllerTransform: {fileID: 6592363549466593726}
   RightControllerTransform: {fileID: 1478771343154856604}
   FloorOffsetTransform: {fileID: 3865986329520126500}
+  HeadsetStandingHeight: 1.65
+  SmoothTurnSpeed: 5
+  SnapTurnIncrement: 45
+--- !u!114 &2207443908239016413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3740902940346483565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 927b63b619dd2634d926312a58c3ba8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MoveVector: {x: 0, y: 0}
+  CrouchInput: 0
+  TurnInput: 0
+  _smoothLocomotion: {fileID: 4948766833549317487}
+  MoveAction: {fileID: 2329931572188812770, guid: 0cd47f68cb724f8478ed745999f9d67a, type: 3}
+  RunAction: {fileID: -6406039945800244612, guid: 0cd47f68cb724f8478ed745999f9d67a, type: 3}
+  CrouchAction: {fileID: -5873772996935874777, guid: 0cd47f68cb724f8478ed745999f9d67a, type: 3}
+  JumpAction: {fileID: -1109987746469713061, guid: 0cd47f68cb724f8478ed745999f9d67a, type: 3}
+  TurnAction: {fileID: -6922838068034798914, guid: 0cd47f68cb724f8478ed745999f9d67a, type: 3}
 --- !u!1 &3792790874959211797
 GameObject:
   m_ObjectHideFlags: 0
@@ -14952,6 +14952,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Feet: {fileID: 8041458702957288490}
+  AvatarEyeHeight: 1.65
   _leftWrist: {fileID: 5488886840134976617}
   _rightWrist: {fileID: 8563664812807291384}
   _leftPalm: {fileID: 5836866895375934951}

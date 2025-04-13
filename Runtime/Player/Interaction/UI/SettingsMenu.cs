@@ -11,7 +11,7 @@ namespace BIMOS
 {
     public class SettingsMenu : MonoBehaviour
     {
-        private Player _player;
+        private BIMOSRig _player;
 
 #if UNITY_WEBGL
         [SerializeField]
@@ -99,26 +99,26 @@ namespace BIMOS
             _menuButtonAction.action.performed -= ToggleMenu;
         }
 
-        private void Awake()
+        public void Start()
         {
             HideMenu();
 
-            _player = GetComponentInParent<Player>();
+            _player = BIMOSRig.Instance;
             SetLayerRecursive(gameObject, LayerMask.NameToLayer("BIMOSMenu"));
             _visualFloorOffset.layer = LayerMask.NameToLayer("BIMOSMenu");
 
             transform.SetParent(_cameraOffsetTransform); //Sets the canvas to follow the camera
 
             //Initialise
-            _heightDisplay.text = "Height: " + (_player.HeadsetStandingHeight * 100).ToString("0") + "cm"; //Display the correct height with no decimals
-            _floorOffsetDisplay.text = "Floor offset: " + (_player.FloorOffset * 100f).ToString("0") + "cm";
+            _heightDisplay.text = "Height: " + (_player.ControllerRig.HeadsetStandingHeight * 100f).ToString("0") + "cm"; //Display the correct height with no decimals
+            _floorOffsetDisplay.text = "Floor offset: " + (_player.ControllerRig.FloorOffset * 100f).ToString("0") + "cm";
 #if !UNITY_ANDROID
             _cameraMode = PlayerPrefs.GetInt("CameraMode", 0);
             UpdateCameraMode();
 #endif
 
-            _smoothTurnSpeedSlider.value = PlayerPrefs.GetFloat("SmoothTurnSpeed", 10); //Sets the smooth turn speed in the player
-            _smoothTurnSpeedDisplay.text = PlayerPrefs.GetFloat("SmoothTurnSpeed", 10).ToString(); //Updates the display
+            _smoothTurnSpeedSlider.value = PlayerPrefs.GetFloat("SmoothTurnSpeed", 10f); //Sets the smooth turn speed in the player
+            _smoothTurnSpeedDisplay.text = PlayerPrefs.GetFloat("SmoothTurnSpeed", 10f).ToString(); //Updates the display
 
             int increment = 0;
             switch (PlayerPrefs.GetFloat("SnapTurnIncrement", 45)) //Compare the value against the different values it can take
@@ -193,47 +193,46 @@ namespace BIMOS
         }
         public void RecalculateHeight()
         {
-            _player.HeadsetStandingHeight = _player.ControllerRig.CameraTransform.localPosition.y;
+            _player.ControllerRig.HeadsetStandingHeight = _player.ControllerRig.CameraTransform.localPosition.y;
             UpdateHeight();
         }
         public void ResetHeight()
         {
-            _player.HeadsetStandingHeight = 1.65f;
+            _player.ControllerRig.HeadsetStandingHeight = 1.65f;
             UpdateHeight();
         }
         public void ChangeHeight(float value)
         {
-            _player.HeadsetStandingHeight += value;
+            _player.ControllerRig.HeadsetStandingHeight += value;
             UpdateHeight();
         }
         private void UpdateHeight()
         {
-            _player.HeadsetStandingHeight = Mathf.Clamp(_player.HeadsetStandingHeight, 1f, 3f);
-            PlayerPrefs.SetFloat("HeadsetStandingHeight", _player.HeadsetStandingHeight);
-            _player.ScaleCharacter();
-            _heightDisplay.text = "Height: " + (_player.HeadsetStandingHeight * 100f).ToString("0") + "cm";
+            _player.ControllerRig.HeadsetStandingHeight = Mathf.Clamp(_player.ControllerRig.HeadsetStandingHeight, 1f, 3f);
+            PlayerPrefs.SetFloat("HeadsetStandingHeight", _player.ControllerRig.HeadsetStandingHeight);
+            _player.ControllerRig.ScaleCharacter();
+            _heightDisplay.text = "Height: " + (_player.ControllerRig.HeadsetStandingHeight * 100f).ToString("0") + "cm";
         }
         public void RecalculateFloorHeight()
         {
-            _player.FloorOffset = _player.HeadsetStandingHeight - _player.ControllerRig.CameraTransform.localPosition.y;
+            _player.ControllerRig.FloorOffset = _player.ControllerRig.HeadsetStandingHeight - _player.ControllerRig.CameraTransform.localPosition.y;
             UpdateFloorHeight();
         }
         public void ResetFloorHeight()
         {
-            _player.FloorOffset = 0f;
+            _player.ControllerRig.FloorOffset = 0f;
             UpdateFloorHeight();
         }
         public void ChangeFloorHeight(float value)
         {
-            _player.FloorOffset += value;
+            _player.ControllerRig.FloorOffset += value;
             UpdateFloorHeight();
         }
         private void UpdateFloorHeight()
         {
-            _player.FloorOffset = Mathf.Clamp(_player.FloorOffset, -1.35f, 0.65f);
-            PlayerPrefs.SetFloat("FloorOffset", _player.FloorOffset);
-            _player.UpdateFloorOffset();
-            _floorOffsetDisplay.text = "Floor offset: " + (_player.FloorOffset * 100f).ToString("0") + "cm";
+            _player.ControllerRig.FloorOffset = Mathf.Clamp(_player.ControllerRig.FloorOffset, -1.35f, 0.65f);
+            PlayerPrefs.SetFloat("FloorOffset", _player.ControllerRig.FloorOffset);
+            _floorOffsetDisplay.text = "Floor offset: " + (_player.ControllerRig.FloorOffset * 100f).ToString("0") + "cm";
         }
         public void ChangeCameraMode()
         {
@@ -336,7 +335,7 @@ namespace BIMOS
         }
         public void UpdateSmoothTurnSpeed()
         {
-            _player.SmoothTurnSpeed = _smoothTurnSpeedSlider.value; //Sets the smooth turn speed in the player
+            _player.ControllerRig.SmoothTurnSpeed = _smoothTurnSpeedSlider.value; //Sets the smooth turn speed in the player
             _smoothTurnSpeedDisplay.text = _smoothTurnSpeedSlider.value.ToString(); //Updates the display
             PlayerPrefs.SetFloat("SmoothTurnSpeed", _smoothTurnSpeedSlider.value);
         }
@@ -358,7 +357,7 @@ namespace BIMOS
                     break;
             }
 
-            _player.SnapTurnIncrement = increment; //Sets the snap turn increment in the player
+            _player.ControllerRig.SnapTurnIncrement = increment; //Sets the snap turn increment in the player
             PlayerPrefs.SetFloat("SnapTurnIncrement", increment);
 
             _snapTurnIncrementDisplay.text = increment.ToString(); //Updates the display

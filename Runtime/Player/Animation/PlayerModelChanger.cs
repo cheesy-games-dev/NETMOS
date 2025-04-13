@@ -5,17 +5,17 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
 [ExecuteInEditMode]
-[RequireComponent(typeof(Player))]
+[RequireComponent(typeof(BIMOSRig))]
 public class PlayerModelChanger : MonoBehaviour
 {
     [SerializeField]
     private GameObject _characterModel;
 
-    private Player _player;
+    private BIMOSRig _player;
 
     public void ChangePlayerModel()
     {
-        _player = GetComponent<Player>();
+        _player = GetComponent<BIMOSRig>();
 
         Animator animator = _characterModel.GetComponent<Animator>();
 

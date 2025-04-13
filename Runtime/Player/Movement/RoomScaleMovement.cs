@@ -4,11 +4,11 @@ namespace BIMOS
 {
     public class RoomScaleMovement : MonoBehaviour
     {
-        private Player _player;
+        private BIMOSRig _player;
 
         private void Awake()
         {
-            _player = GetComponentInParent<Player>();
+            _player = BIMOSRig.Instance;
         }
 
         private void FixedUpdate()

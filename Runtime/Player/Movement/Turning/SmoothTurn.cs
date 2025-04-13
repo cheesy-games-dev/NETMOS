@@ -4,20 +4,20 @@ namespace BIMOS
 {
     public class SmoothTurn : MonoBehaviour
     {
-        private Player _player;
+        private ControllerRig _controllerRig;
 
-        private void Awake()
+        private void Start()
         {
-            _player = GetComponentInParent<Player>();
+            _controllerRig = BIMOSRig.Instance.ControllerRig;
         }
 
         private void Update()
         {
-            if (Mathf.Abs(_player.InputReader.TurnInput) < 0.75f)
+            if (Mathf.Abs(_controllerRig.InputReader.TurnInput) < 0.75f)
                 return;
 
-            float normalisedTurnInput = _player.InputReader.TurnInput / Mathf.Abs(_player.InputReader.TurnInput);
-            _player.ControllerRig.transform.Rotate(0f, normalisedTurnInput * 20f * _player.SmoothTurnSpeed * Time.deltaTime, 0f); //Rotates player
+            float normalisedTurnInput = _controllerRig.InputReader.TurnInput / Mathf.Abs(_controllerRig.InputReader.TurnInput);
+            _controllerRig.transform.Rotate(0f, normalisedTurnInput * 20f * _controllerRig.SmoothTurnSpeed * Time.deltaTime, 0f); //Rotates player
         }
     }
 }

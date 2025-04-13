@@ -2,16 +2,16 @@ using UnityEngine;
 
 namespace BIMOS
 {
-    public class Crouching : MonoBehaviour
+    public class Hips : MonoBehaviour
     {
-        private Player _player;
+        private BIMOSRig _player;
 
         [SerializeField]
         private Transform _hipStandTransform, _hipCrouchTransform;
 
-        private void Awake()
+        private void Start()
         {
-            _player = GetComponentInParent<Player>();
+            _player = BIMOSRig.Instance;
         }
 
         void Update()

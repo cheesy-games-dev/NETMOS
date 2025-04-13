@@ -2,16 +2,16 @@ using UnityEngine;
 
 namespace BIMOS
 {
-    public class Hips : MonoBehaviour
+    public class Crouching : MonoBehaviour
     {
-        private Player _player;
+        private BIMOSRig _player;
 
-        private void Awake()
+        private void Start()
         {
-            _player = GetComponentInParent<Player>();
+            _player = BIMOSRig.Instance;
         }
 
-        private void FixedUpdate()
+        public void FixedUpdate()
         {
             VirtualCrouching();
             ApplyCrouch();
@@ -19,9 +19,10 @@ namespace BIMOS
 
         private void VirtualCrouching()
         {
-            if (Mathf.Abs(_player.InputReader.CrouchInput) > 0.75f && _player.PhysicsRig.JumpState != PhysicsRig.JumpStates.Ascending && _player.PhysicsRig.JumpState != PhysicsRig.JumpStates.Descending)
+            bool isJumping = _player.PhysicsRig.JumpState == PhysicsRig.JumpStates.Ascending || _player.PhysicsRig.JumpState == PhysicsRig.JumpStates.Descending;
+            if (Mathf.Abs(_player.ControllerRig.InputReader.CrouchInput) > 0.75f && !isJumping)
             {
-                _player.PhysicsRig.FenderPelvisOffset += _player.InputReader.CrouchInput * 2.5f * Time.fixedDeltaTime / 1.65f;
+                _player.PhysicsRig.FenderPelvisOffset += _player.ControllerRig.InputReader.CrouchInput * 2.5f * Time.fixedDeltaTime / 1.65f;
             }
         }
 
@@ -34,7 +35,7 @@ namespace BIMOS
                 lowerBound = 0f; //Enables full crouching
                 upperBound = 0.35f; //Disables standing up
             }
-            else if (Mathf.Abs(_player.InputReader.CrouchInput) > 0.1f || _player.PhysicsRig.JumpState != PhysicsRig.JumpStates.NotJumping)
+            else if (Mathf.Abs(_player.ControllerRig.InputReader.CrouchInput) > 0.1f || _player.PhysicsRig.JumpState != PhysicsRig.JumpStates.NotJumping)
             {
                 lowerBound = 0f; //Enables full crouching
                 upperBound = 0.65f; //Enables tippy-toes

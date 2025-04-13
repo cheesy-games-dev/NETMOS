@@ -4,7 +4,7 @@ namespace BIMOS
 {
     public class TeleportLocomotion : MonoBehaviour
     {
-        private Player _player;
+        private BIMOSRig _player;
 
         private bool _isTeleporting; //Whether the player is teleporting or not
 
@@ -23,7 +23,7 @@ namespace BIMOS
 
         private void Awake()
         {
-            _player = GetComponentInParent<Player>();
+            _player = BIMOSRig.Instance;
         }
 
         private void Start()
@@ -50,9 +50,9 @@ namespace BIMOS
             bool wasTeleporting = _isTeleporting;
 
             if (wasTeleporting)
-                _isTeleporting = _player.InputReader.MoveVector.magnitude > 0.25f;
+                _isTeleporting = _player.ControllerRig.InputReader.MoveVector.magnitude > 0.25f;
             else
-                _isTeleporting = _player.InputReader.MoveVector.magnitude > 0.5f;
+                _isTeleporting = _player.ControllerRig.InputReader.MoveVector.magnitude > 0.5f;
 
             _lineRenderer.enabled = _isTeleporting;
 
