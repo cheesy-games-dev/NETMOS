@@ -4,8 +4,11 @@ namespace BIMOS
 {
     public class SpawnPointManager : MonoBehaviour
     {
+        public static SpawnPointManager Instance { get; private set; }
+
         public SpawnPoint SpawnPoint;
         public GameObject PlayerInstance;
+        public GameObject RigPrefab;
 
         [Tooltip("Inserts this prefab in front of player on respawn")]
         public GameObject StarterProp;
@@ -16,6 +19,13 @@ namespace BIMOS
 
         private void Awake()
         {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+
             if (!SpawnPoint)
             {
                 SpawnPoint = FindFirstObjectByType<SpawnPoint>();
@@ -51,5 +61,7 @@ namespace BIMOS
             if (StarterProp)
                 _starterPropInstance = Instantiate(StarterProp, SpawnPoint.transform.TransformPoint(StarterPropOffset), SpawnPoint.transform.rotation);
         }
+
+        public void SetRigPrefab(GameObject rigPrefab) => RigPrefab = rigPrefab;
     }
 }
