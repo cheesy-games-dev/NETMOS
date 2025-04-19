@@ -14,7 +14,7 @@ namespace BIMOS
         private HandPose _hoverHandPose, _defaultGrabHandPose;
 
         [SerializeField]
-        private AudioClip[] _grabSounds, _releaseSounds;
+        private AudioVarianceData _grabSounds, _releaseSounds;
 
         private Grab _chosenGrab;
         private AudioSource _audioSource;
@@ -83,7 +83,7 @@ namespace BIMOS
                 return;
 
             _chosenGrab.OnGrab(_hand);
-            _audioSource.PlayOneShot(Utilities.RandomAudioClip(_grabSounds));
+            _audioSource.PlayOneShot(_grabSounds.GetRandomClip());
         }
 
         public void AttemptRelease()
@@ -92,7 +92,7 @@ namespace BIMOS
                 return;
 
             _hand.CurrentGrab.OnRelease(_hand, true);
-            _audioSource.PlayOneShot(Utilities.RandomAudioClip(_releaseSounds));
+            _audioSource.PlayOneShot(_releaseSounds.GetRandomClip());
         }
 
         private void OnDisable()

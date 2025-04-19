@@ -95,12 +95,28 @@ namespace BIMOS
 
         private void CreateGrabJoint(Hand hand)
         {
-            FixedJoint grabJoint = hand.PhysicsHandTransform.gameObject.AddComponent<FixedJoint>();
-            grabJoint.enableCollision = true;
+            var grabJoint = hand.PhysicsHandTransform.gameObject.AddComponent<ConfigurableJoint>();
+
+            grabJoint.enableCollision = false;
+            //grabJoint.enablePreprocessing = false;
             if (_rigidBody)
                 grabJoint.connectedBody = _rigidBody;
             if (_articulationBody)
                 grabJoint.connectedArticulationBody = _articulationBody;
+
+            grabJoint.xMotion
+                = grabJoint.yMotion
+                = grabJoint.zMotion
+                = grabJoint.xMotion
+                = grabJoint.angularXMotion
+                = grabJoint.angularYMotion
+                = grabJoint.angularZMotion
+                = ConfigurableJointMotion.Locked;
+
+            grabJoint.projectionMode = JointProjectionMode.PositionAndRotation;
+            grabJoint.projectionAngle = 0f;
+
+            hand.GrabJoint = grabJoint;
         }
 
         public void OnRelease(Hand hand, bool toggleGrabs) //Triggered when player releases the grab
@@ -141,8 +157,8 @@ namespace BIMOS
             if (!hand)
                 return;
 
-            FixedJoint grabJoint = hand.PhysicsHandTransform.GetComponent<FixedJoint>(); //Gets the grab joint
-            Destroy(grabJoint); //Deletes the joint, letting it go
+            if (hand.GrabJoint)
+                Destroy(hand.GrabJoint); //Deletes the joint, letting it go
 
             IgnoreCollision(hand, false);
 

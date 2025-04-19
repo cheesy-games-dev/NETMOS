@@ -46,10 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpawnPoint: {fileID: 0}
   PlayerInstance: {fileID: 0}
-  _startGravity: {x: 0, y: -9.81, z: 0}
-  _startTimeScale: 1
+  RigPrefab: {fileID: 3169780607551956412, guid: 0f6a8eddd3b3f134cba43472c935bf29, type: 3}
   StarterProp: {fileID: 0}
-  StarterPropOffset: {x: 0, y: 1, z: 1}
+  StarterPropOffset: {x: 0, y: 1, z: -18.8}
 --- !u!1 &2982075419223860710
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,7 +93,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80078a8da7cb25e4fa1ac6beebf93bcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pools: []
 --- !u!1 &4141920224076196924
 GameObject:
   m_ObjectHideFlags: 0

@@ -35,9 +35,9 @@ namespace BIMOS
                     return;
                 }
             }
-
-            Respawn();
         }
+
+        private void Start() => Respawn();
 
         public void SetStarterPropOffsetX(float x) => StarterPropOffset.x = x;
 

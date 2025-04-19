@@ -9,7 +9,6 @@ namespace BIMOS
         public ControllerRig ControllerRig;
         public PhysicsRig PhysicsRig;
         public AnimationRig AnimationRig;
-        public SettingsMenu UIRig;
 
         private void Awake()
         {

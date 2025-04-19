@@ -21,11 +21,12 @@ namespace BIMOS
 
         private Grab _grab;
 
-        private void Awake()
-        {
-            _grab = GetComponent<Grab>();
-            _grab.ReleaseEvent += OnRelease;
-        }
+        private void Awake() => _grab = GetComponent<Grab>();
+
+        private void OnEnable() => _grab.ReleaseEvent += OnRelease;
+
+        private void OnDisable() => _grab.ReleaseEvent -= OnRelease;
+
         private void CheckInputs(out float trigger, out bool primary, out bool secondary)
         {
             float leftTrigger = 0f;

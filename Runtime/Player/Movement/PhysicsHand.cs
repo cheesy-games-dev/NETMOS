@@ -11,13 +11,15 @@ namespace BIMOS
         private BIMOSRig _player;
 
         private ConfigurableJoint _handJoint;
+        private Rigidbody _rigidbody;
 
         private void Start()
         {
             _player = BIMOSRig.Instance;
 
-            GetComponent<Rigidbody>().solverIterations = 60;
-            GetComponent<Rigidbody>().solverVelocityIterations = 10;
+            _rigidbody = GetComponent<Rigidbody>();
+            _rigidbody.solverIterations = 60;
+            _rigidbody.solverVelocityIterations = 10;
 
             TargetOffsetRotation = Quaternion.identity;
             _handJoint = GetComponent<ConfigurableJoint>();

@@ -8,7 +8,7 @@ namespace BIMOS
         private BIMOSRig _player;
 
         [SerializeField]
-        private AudioClip[] _walkSounds, _runSounds;
+        private AudioVarianceData _walkSounds, _runSounds;
 
         private Foot _currentFoot, _leftFoot, _rightFoot;
 
@@ -168,17 +168,17 @@ namespace BIMOS
 
         private void PlayFootstepSound()
         {
-            AudioClip[] audioClips;
+            AudioVarianceData audioVarianceData;
             if (_pelvisVelocity.magnitude < 2) //If player is running
             {
-                audioClips = _walkSounds;
+                audioVarianceData = _walkSounds;
             }
             else
             {
-                audioClips = _runSounds;
+                audioVarianceData = _runSounds;
             }
 
-            _currentFoot.Transform.GetComponent<AudioSource>().PlayOneShot(Utilities.RandomAudioClip(audioClips));
+            _currentFoot.Transform.GetComponent<AudioSource>().PlayOneShot(audioVarianceData.GetRandomClip());
         }
     }
 

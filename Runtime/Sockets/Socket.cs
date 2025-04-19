@@ -20,7 +20,7 @@ namespace BIMOS
         public FixedJoint AttachJoint;
 
         [SerializeField]
-        private AudioClip[] _attachSounds, _detachSounds;
+        private AudioVarianceData _attachSounds, _detachSounds;
 
         [SerializeField]
         private UnityEvent AttachEvent, DetachEvent; 
@@ -95,7 +95,7 @@ namespace BIMOS
                     grab.enabled = false;
 
             if (_audioSource)
-                _audioSource.PlayOneShot(Utilities.RandomAudioClip(_attachSounds));
+                _audioSource.PlayOneShot(_attachSounds.GetRandomClip());
 
             StartCoroutine(AttachCoroutine());
             AttachEvent.Invoke();
@@ -141,7 +141,7 @@ namespace BIMOS
             _onCooldown = true;
 
             if (_audioSource)
-                _audioSource.PlayOneShot(Utilities.RandomAudioClip(_detachSounds));
+                _audioSource.PlayOneShot(_detachSounds.GetRandomClip());
 
             Destroy(AttachJoint);
 
