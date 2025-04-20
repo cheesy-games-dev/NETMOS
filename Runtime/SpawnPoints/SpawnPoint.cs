@@ -4,19 +4,15 @@ namespace BIMOS
 {
     public class SpawnPoint : MonoBehaviour
     {
-        private SpawnPointManager _spawnPointManager;
-
-        private void Start()
-        {
-            GameObject placeholder = transform.GetChild(0).gameObject;
-            Destroy(placeholder);
-
-            _spawnPointManager = SpawnPointManager.Instance;
-        }
+        private void Awake() => Destroy(transform.GetChild(0).gameObject);
 
         public GameObject Spawn()
         {
-            GameObject player = Instantiate(_spawnPointManager.RigPrefab, transform.position, Quaternion.identity);
+            GameObject player = Instantiate(
+                SpawnPointManager.Instance.RigPrefab,
+                transform.position,
+                Quaternion.identity
+            );
             player.GetComponent<BIMOSRig>().ControllerRig.transform.rotation = transform.rotation;
             return player;
         }
