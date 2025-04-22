@@ -16,14 +16,12 @@ namespace BIMOS
         public bool IsLeftHand;
         public Hand otherHand;
         public Collider PhysicsHandCollider;
-        public ConfigurableJoint GrabJoint;
+        public Joint GrabJoint;
 
         [SerializeField]
         private InputActionReference HapticAction;
 
         public void SendHapticImpulse(float amplitude, float duration)
-        {
-            OpenXRInput.SendHapticImpulse(HapticAction, amplitude, duration);
-        }
+            => OpenXRInput.SendHapticImpulse(HapticAction, amplitude, duration);
     }
 }

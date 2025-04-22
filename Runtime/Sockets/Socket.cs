@@ -94,7 +94,7 @@ namespace BIMOS
                 if (grab)
                     grab.enabled = false;
 
-            if (_audioSource)
+            if (_audioSource && _attachSounds)
                 _audioSource.PlayOneShot(_attachSounds.GetRandomClip());
 
             StartCoroutine(AttachCoroutine());
@@ -140,7 +140,7 @@ namespace BIMOS
 
             _onCooldown = true;
 
-            if (_audioSource)
+            if (_audioSource && _detachSounds)
                 _audioSource.PlayOneShot(_detachSounds.GetRandomClip());
 
             Destroy(AttachJoint);

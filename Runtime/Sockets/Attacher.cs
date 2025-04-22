@@ -15,10 +15,7 @@ namespace BIMOS
         [HideInInspector]
         public Socket Socket;
 
-        private void Awake()
-        {
-            Rigidbody = GetComponentInParent<Rigidbody>();
-        }
+        private void Awake() => Rigidbody = GetComponentInParent<Rigidbody>();
 
         public bool IsGrabbed()
         {

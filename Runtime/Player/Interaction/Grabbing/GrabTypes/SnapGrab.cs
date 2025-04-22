@@ -12,8 +12,10 @@ namespace BIMOS
 
         public override void AlignHand(Hand hand)
         {
-            hand.PhysicsHandTransform.position = transform.TransformPoint(hand.PalmTransform.InverseTransformPoint(hand.PhysicsHandTransform.position));
-            hand.PhysicsHandTransform.rotation = transform.rotation * Quaternion.Inverse(hand.PalmTransform.rotation) * hand.PhysicsHandTransform.rotation;
+            hand.PhysicsHandTransform.SetPositionAndRotation(
+                transform.TransformPoint(hand.PalmTransform.InverseTransformPoint(hand.PhysicsHandTransform.position)),
+                transform.rotation * Quaternion.Inverse(hand.PalmTransform.rotation) * hand.PhysicsHandTransform.rotation
+            );
         }
     }
 }

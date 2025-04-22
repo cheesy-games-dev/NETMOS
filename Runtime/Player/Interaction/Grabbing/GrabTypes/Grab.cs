@@ -97,8 +97,8 @@ namespace BIMOS
         {
             var grabJoint = hand.PhysicsHandTransform.gameObject.AddComponent<ConfigurableJoint>();
 
-            grabJoint.enableCollision = false;
-            //grabJoint.enablePreprocessing = false;
+            grabJoint.enableCollision = true;
+            grabJoint.enablePreprocessing = false;
             if (_rigidBody)
                 grabJoint.connectedBody = _rigidBody;
             if (_articulationBody)
@@ -114,7 +114,6 @@ namespace BIMOS
                 = ConfigurableJointMotion.Locked;
 
             grabJoint.projectionMode = JointProjectionMode.PositionAndRotation;
-            grabJoint.projectionAngle = 0f;
 
             hand.GrabJoint = grabJoint;
         }

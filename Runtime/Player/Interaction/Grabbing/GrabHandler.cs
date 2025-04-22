@@ -19,10 +19,7 @@ namespace BIMOS
         private Grab _chosenGrab;
         private AudioSource _audioSource;
 
-        private void Awake()
-        {
-            _audioSource = GetComponent<AudioSource>();
-        }
+        private void Awake() => _audioSource = GetComponent<AudioSource>();
 
         private void Update()
         {
