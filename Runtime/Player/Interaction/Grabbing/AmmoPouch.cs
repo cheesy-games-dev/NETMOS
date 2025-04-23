@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace BIMOS
 {
-    public class AmmoPouch : Grab
+    public class AmmoPouch : Grabbable
     {
         public static AmmoPouch Instance;
 
-        public GameObject MagazinePrefab;
+        public GameObject AmmoPrefab;
         private List<GameObject> _spawnedMagazines = new();
 
         private void Awake()
@@ -20,19 +20,19 @@ namespace BIMOS
             Instance = this;
         }
 
-        public override void OnGrab(Hand hand) //Triggered when player grabs the grab
+        public override void Grab(Hand hand) //Triggered when player grabs the grab
         {
-            if (MagazinePrefab == null)
+            if (AmmoPrefab == null)
                 return;
 
-            OnRelease(hand, true);
-            GameObject magazine = Instantiate(MagazinePrefab);
+            Release(hand, true);
+            GameObject magazine = Instantiate(AmmoPrefab);
             magazine.transform.SetPositionAndRotation(hand.PhysicsHandTransform.position, hand.PhysicsHandTransform.rotation);
 
-            foreach (Grab grab in magazine.GetComponentsInChildren<SnapGrab>())
+            foreach (Grabbable grab in magazine.GetComponentsInChildren<SnapGrabbable>())
                 if (grab.IsLeftHanded && hand.IsLeftHand || grab.IsRightHanded && !hand.IsLeftHand)
                 {
-                    grab.OnGrab(hand);
+                    grab.Grab(hand);
                     break;
                 }
 

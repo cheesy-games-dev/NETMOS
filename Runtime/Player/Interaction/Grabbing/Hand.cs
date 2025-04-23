@@ -7,7 +7,7 @@ namespace BIMOS
     public class Hand : MonoBehaviour
     {
         public HandAnimator HandAnimator;
-        public Grab CurrentGrab;
+        public Grabbable CurrentGrab;
         public HandInputReader HandInputReader;
         public Transform PalmTransform;
         public PhysicsHand PhysicsHand;

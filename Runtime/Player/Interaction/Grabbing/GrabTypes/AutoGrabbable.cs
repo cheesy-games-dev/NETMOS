@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace BIMOS
 {
-    [AddComponentMenu("BIMOS/Grabs/Grab (Auto)")]
-    public class AutoGrab : Grab
+    [AddComponentMenu("BIMOS/Grabbables/Grabbable (Auto)")]
+    public class AutoGrabbable : Grabbable
     {
         public override void AlignHand(Hand hand)
         {

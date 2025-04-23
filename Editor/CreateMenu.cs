@@ -1,4 +1,3 @@
-using System.Net.Sockets;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,10 +15,10 @@ namespace BIMOS
 
             if (!spawnPointManager)
             {
-                GameObject spawnPointManagerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Packages/com.kadenzombie8.bimos/Assets/[BIMOS] Spawn Point Manager.prefab");
+                GameObject spawnPointManagerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Packages/com.kadenzombie8.bimos/Assets/[BIMOS] Managers.prefab");
                 GameObject spawnPointManagerInstance = PrefabUtility.InstantiatePrefab(spawnPointManagerPrefab) as GameObject;
                 GameObjectUtility.SetParentAndAlign(spawnPointManagerInstance, null);
-                spawnPointManager = spawnPointManagerInstance.GetComponent<SpawnPointManager>();
+                spawnPointManager = spawnPointManagerInstance.GetComponentInChildren<SpawnPointManager>();
             }
 
             if (!spawnPointManager.SpawnPoint)
@@ -31,10 +30,10 @@ namespace BIMOS
         [MenuItem("GameObject/BIMOS/Socket")]
         static void CreateSocket()
         {
-            GameObject socket = new GameObject("Socket", typeof(Socket));
+            GameObject socket = new("Socket", typeof(Socket));
 
-            GameObject attach = new GameObject("AttachPoint");
-            GameObject detach = new GameObject("DetachPoint");
+            GameObject attach = new("AttachPoint");
+            GameObject detach = new("DetachPoint");
             attach.transform.parent = socket.transform;
             detach.transform.parent = socket.transform;
 
@@ -44,34 +43,34 @@ namespace BIMOS
             GameObjectUtility.SetParentAndAlign(socket, Selection.activeGameObject);
         }
 
-        [MenuItem("GameObject/BIMOS/Grabs/Snap")]
+        [MenuItem("GameObject/BIMOS/Grabbables/Snap")]
         static void CreateSnapGrab()
         {
-            GameObject grab = new GameObject("Grab", typeof(SnapGrab));
+            GameObject grab = new("Grab", typeof(SnapGrabbable));
             GameObjectUtility.SetParentAndAlign(grab, Selection.activeGameObject);
         }
 
-        [MenuItem("GameObject/BIMOS/Grabs/Offhand")]
+        [MenuItem("GameObject/BIMOS/Grabbables/Offhand")]
         static void CreateOffhandGrab()
         {
-            GameObject grab = new GameObject("Grab", typeof(OffhandGrab));
+            GameObject grab = new("Grab", typeof(OffhandGrabbable));
             GameObjectUtility.SetParentAndAlign(grab, Selection.activeGameObject);
         }
 
-        [MenuItem("GameObject/BIMOS/Grabs/Line")]
+        [MenuItem("GameObject/BIMOS/Grabbables/Line")]
         static void CreateLineGrab()
         {
-            GameObject grab = new GameObject("Grab", typeof(LineGrab));
+            GameObject grab = new("Grab", typeof(LineGrabbable));
 
-            GameObject start = new GameObject("Start");
-            GameObject end = new GameObject("End");
+            GameObject start = new("Start");
+            GameObject end = new("End");
             start.transform.parent = grab.transform;
             start.transform.localPosition = Vector3.right * 0.5f;
             end.transform.parent = grab.transform;
             start.transform.localPosition = Vector3.left * 0.5f;
 
-            grab.GetComponent<LineGrab>().Start = start.transform;
-            grab.GetComponent<LineGrab>().End = end.transform;
+            grab.GetComponent<LineGrabbable>().Start = start.transform;
+            grab.GetComponent<LineGrabbable>().End = end.transform;
 
             GameObjectUtility.SetParentAndAlign(grab, Selection.activeGameObject);
         }

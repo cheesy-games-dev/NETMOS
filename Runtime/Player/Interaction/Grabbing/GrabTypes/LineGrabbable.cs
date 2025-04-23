@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace BIMOS
 {
-    [AddComponentMenu("BIMOS/Grabs/Grab (Line)")]
-    public class LineGrab : SnapGrab
+    [AddComponentMenu("BIMOS/Grabbables/Grabbable (Line)")]
+    public class LineGrabbable : SnapGrabbable
     {
         public Transform Start, End;
 

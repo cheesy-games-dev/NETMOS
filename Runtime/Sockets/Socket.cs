@@ -86,11 +86,11 @@ namespace BIMOS
                 foreach (Collider socketCollider in _body.GetComponentsInChildren<Collider>())
                     Physics.IgnoreCollision(attacherCollider, socketCollider, true);
 
-            foreach (Grab grab in Attacher.EnableGrabs)
+            foreach (Grabbable grab in Attacher.EnableGrabs)
                 if (grab)
                     grab.enabled = true;
 
-            foreach (Grab grab in Attacher.DisableGrabs)
+            foreach (Grabbable grab in Attacher.DisableGrabs)
                 if (grab)
                     grab.enabled = false;
 
@@ -165,11 +165,11 @@ namespace BIMOS
                 foreach (Collider socketCollider in _body.GetComponentsInChildren<Collider>())
                     Physics.IgnoreCollision(attacherCollider, socketCollider, false);
 
-            foreach (Grab grab in Attacher.EnableGrabs)
+            foreach (Grabbable grab in Attacher.EnableGrabs)
                 if (grab)
                     grab.enabled = false;
 
-            foreach (Grab grab in Attacher.DisableGrabs)
+            foreach (Grabbable grab in Attacher.DisableGrabs)
                 if (grab)
                     grab.enabled = true;
 

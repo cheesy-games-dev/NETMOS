@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace BIMOS
 {
-    [AddComponentMenu("BIMOS/Grabs/Grab (Offhand)")]
-    public class OffhandGrab : SnapGrab
+    [AddComponentMenu("BIMOS/Grabbables/Grabbable (Offhand)")]
+    public class OffhandGrabbable : SnapGrabbable
     {
         public override void AlignHand(Hand hand)
         {

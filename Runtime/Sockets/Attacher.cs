@@ -7,7 +7,7 @@ namespace BIMOS
     {
         public string[] Tags;
 
-        public Grab[] EnableGrabs, DisableGrabs;
+        public Grabbable[] EnableGrabs, DisableGrabs;
 
         [HideInInspector]
         public Rigidbody Rigidbody;
@@ -19,7 +19,7 @@ namespace BIMOS
 
         public bool IsGrabbed()
         {
-            foreach (Grab grab in Rigidbody.GetComponentsInChildren<Grab>())
+            foreach (Grabbable grab in Rigidbody.GetComponentsInChildren<Grabbable>())
                 if (grab.LeftHand || grab.RightHand)
                     return true;
 

@@ -8,7 +8,7 @@ namespace BIMOS
     public class GrabHapticsHandler : MonoBehaviour
     {
         [SerializeField]
-        private Grab[] _grabs;
+        private Grabbable[] _grabs;
 
         /// <summary>
         /// Sends haptic impulses to each of the defined grabs
@@ -17,7 +17,7 @@ namespace BIMOS
         /// <param name="duration">The duration of the impulse</param>
         public void SendHapticImpulse(float amplitude, float duration)
         {
-            foreach (Grab grab in _grabs) {
+            foreach (Grabbable grab in _grabs) {
                 if (grab.LeftHand)
                     grab.LeftHand.SendHapticImpulse(amplitude, duration);
                 if (grab.RightHand)

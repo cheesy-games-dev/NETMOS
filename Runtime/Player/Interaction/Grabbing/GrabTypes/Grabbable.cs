@@ -1,18 +1,19 @@
+using System;
 using UnityEngine;
 
 namespace BIMOS
 {
-    [AddComponentMenu("BIMOS/Grabs/Grab (Basic)")]
-    public class Grab : MonoBehaviour
+    [AddComponentMenu("BIMOS/Grabbables/Grabbable (Basic)")]
+    public class Grabbable : MonoBehaviour
     {
+        public event Action OnGrab;
+        public event Action OnRelease;
+        public HandPose HandPose;
+        public bool IsLeftHanded = true, IsRightHanded = true;
+        public Grabbable[] EnableGrabs, DisableGrabs;
+
         [HideInInspector]
         public Hand LeftHand, RightHand;
-
-        public HandPose HandPose;
-        public delegate void Release();
-        public event Release ReleaseEvent;
-        public bool IsLeftHanded = true, IsRightHanded = true;
-        public Grab[] EnableGrabs, DisableGrabs;
 
         private Rigidbody _rigidBody;
         private ArticulationBody _articulationBody;
@@ -55,7 +56,7 @@ namespace BIMOS
             return 1f / Vector3.Distance(handTransform.position, Collider.ClosestPoint(handTransform.position)); //Reciprocal of distance from hand to grab
         }
 
-        public virtual void OnGrab(Hand hand) //Triggered when player grabs the grab
+        public virtual void Grab(Hand hand) //Triggered when player grabs the grab
         {
             hand.CurrentGrab = this;
 
@@ -71,18 +72,21 @@ namespace BIMOS
 
             IgnoreCollision(hand, true);
 
-            foreach (Grab grab in EnableGrabs)
+            foreach (Grabbable grab in EnableGrabs)
             {
                 if (grab)
                     grab.enabled = true;
             }
-            foreach (Grab grab in DisableGrabs)
+            foreach (Grabbable grab in DisableGrabs)
             {
                 if (grab)
                     grab.enabled = false;
             }
 
-            GetComponent<Interactable>()?.OnGrab();
+            if (TryGetComponent<Interactable>(out var interactable))
+                interactable.OnRelease();
+
+            OnGrab?.Invoke();
         }
 
         public virtual void IgnoreCollision(Hand hand, bool ignore)
@@ -118,7 +122,7 @@ namespace BIMOS
             hand.GrabJoint = grabJoint;
         }
 
-        public void OnRelease(Hand hand, bool toggleGrabs) //Triggered when player releases the grab
+        public void Release(Hand hand, bool toggleGrabs) //Triggered when player releases the grab
         {
             if (!hand)
                 return;
@@ -127,19 +131,20 @@ namespace BIMOS
 
             if (toggleGrabs)
             {
-                foreach (Grab grab in EnableGrabs)
+                foreach (Grabbable grab in EnableGrabs)
                 {
                     if (grab)
                         grab.enabled = false;
                 }
-                foreach (Grab grab in DisableGrabs)
+                foreach (Grabbable grab in DisableGrabs)
                 {
                     if (grab)
                         grab.enabled = true;
                 }
             }
 
-            GetComponent<Interactable>()?.OnRelease();
+            if (TryGetComponent<Interactable>(out var interactable))
+                interactable.OnRelease();
 
             hand.CurrentGrab = null;
 
@@ -148,7 +153,7 @@ namespace BIMOS
             else
                 RightHand = null;
 
-            ReleaseEvent?.Invoke();
+            OnRelease?.Invoke();
         }
 
         public virtual void DestroyGrabJoint(Hand hand)
@@ -167,8 +172,8 @@ namespace BIMOS
 
         private void OnDisable()
         {
-            OnRelease(LeftHand, false);
-            OnRelease(RightHand, false);
+            Release(LeftHand, false);
+            Release(RightHand, false);
         }
     }
 }

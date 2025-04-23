@@ -118,7 +118,7 @@ namespace BIMOS
 
                     if (_currentSelection)
                     {
-                        SnapGrab grab = _currentSelection.GetComponent<SnapGrab>();
+                        SnapGrabbable grab = _currentSelection.GetComponent<SnapGrabbable>();
                         if (grab)
                         {
                             if (grab.IsLeftHanded && !grab.IsRightHanded)
@@ -324,7 +324,7 @@ namespace BIMOS
                 {
                     foreach (GameObject grab in Selection.gameObjects)
                     {
-                        if (!grab.GetComponent<Grab>())
+                        if (!grab.GetComponent<Grabbable>())
                             return;
 
                         GameObject mirroredGrab = Instantiate(grab, grab.transform.parent);
@@ -349,7 +349,7 @@ namespace BIMOS
                             child.parent = mirroredGrab.transform;
                         }
 
-                        Grab snapGrab = mirroredGrab.GetComponent<Grab>();
+                        Grabbable snapGrab = mirroredGrab.GetComponent<Grabbable>();
                         if (snapGrab.IsLeftHanded)
                         {
                             snapGrab.IsLeftHanded = false;

@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace BIMOS
 {
-    [AddComponentMenu("BIMOS/Grabs/Grab (Snap)")]
-    public class SnapGrab : Grab
+    [AddComponentMenu("BIMOS/Grabbables/Grabbable (Snap)")]
+    public class SnapGrabbable : Grabbable
     {
         public override float CalculateRank(Transform handTransform)
         {

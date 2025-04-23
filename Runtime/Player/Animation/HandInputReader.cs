@@ -138,7 +138,7 @@ namespace BIMOS
 
         private void OnTriggerButton(InputAction.CallbackContext callbackContext)
         {
-            Grab currentGrab = Hand.CurrentGrab;
+            Grabbable currentGrab = Hand.CurrentGrab;
 
             if (!currentGrab || callbackContext.started)
                 return;
@@ -171,7 +171,7 @@ namespace BIMOS
         {
             PrimaryButton = callbackContext.performed;
 
-            Grab currentGrab = Hand.CurrentGrab;
+            Grabbable currentGrab = Hand.CurrentGrab;
 
             if (!currentGrab || callbackContext.started)
                 return;
@@ -189,7 +189,7 @@ namespace BIMOS
         {
             SecondaryButton = callbackContext.performed ? true : false;
 
-            Grab currentGrab = Hand.CurrentGrab;
+            Grabbable currentGrab = Hand.CurrentGrab;
 
             if (!currentGrab || callbackContext.started)
                 return;

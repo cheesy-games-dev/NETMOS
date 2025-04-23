@@ -16,7 +16,7 @@ namespace BIMOS
         [SerializeField]
         private AudioVarianceData _grabSounds, _releaseSounds;
 
-        private Grab _chosenGrab;
+        private Grabbable _chosenGrab;
         private AudioSource _audioSource;
 
         private void Awake() => _audioSource = GetComponent<AudioSource>();
@@ -40,18 +40,18 @@ namespace BIMOS
             _hand.HandAnimator.HandPose = handPose;
         }
 
-        private Grab GetChosenGrab()
+        private Grabbable GetChosenGrab()
         {
             Collider[] grabColliders = Physics.OverlapBox(_grabBounds.position, _grabBounds.localScale / 2, _grabBounds.rotation, Physics.AllLayers, QueryTriggerInteraction.Collide); //Get all grabs in the grab bounds
             float highestRank = 0;
-            Grab highestRankGrab = null;
+            Grabbable highestRankGrab = null;
 
             foreach (Collider grabCollider in grabColliders) //Loop through found grab colliders to find grab with highest rank
             {
-                Grab grab = grabCollider.GetComponent<Grab>();
+                Grabbable grab = grabCollider.GetComponent<Grabbable>();
 
                 if (!grab)
-                    grab = grabCollider.GetComponentInParent<Grab>();
+                    grab = grabCollider.GetComponentInParent<Grabbable>();
 
                 if (!grab)
                     continue;
@@ -79,7 +79,7 @@ namespace BIMOS
             if (!_chosenGrab)
                 return;
 
-            _chosenGrab.OnGrab(_hand);
+            _chosenGrab.Grab(_hand);
             _audioSource.PlayOneShot(_grabSounds.GetRandomClip());
         }
 
@@ -88,7 +88,7 @@ namespace BIMOS
             if (!_hand.CurrentGrab)
                 return;
 
-            _hand.CurrentGrab.OnRelease(_hand, true);
+            _hand.CurrentGrab.Release(_hand, true);
             _audioSource.PlayOneShot(_releaseSounds.GetRandomClip());
         }
 
