@@ -3,7 +3,6 @@ using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
-using UnityEngine.XR;
 
 namespace BIMOS
 {
@@ -48,10 +47,7 @@ namespace BIMOS
         private Object _currentAsset;
 
         [MenuItem("Window/BIMOS/Hand Pose Editor")]
-        public static void ShowEditor()
-        {
-            GetWindow<HandPoseEditor>("Hand Pose Editor");
-        }
+        public static void ShowEditor() => GetWindow<HandPoseEditor>("Hand Pose Editor");
 
         private void Update()
         {
@@ -350,15 +346,10 @@ namespace BIMOS
                         }
 
                         Grabbable snapGrab = mirroredGrab.GetComponent<Grabbable>();
-                        if (snapGrab.IsLeftHanded)
+                        if (snapGrab.IsLeftHanded != snapGrab.IsRightHanded)
                         {
-                            snapGrab.IsLeftHanded = false;
-                            snapGrab.IsRightHanded = true;
-                        }
-                        else if (snapGrab.IsRightHanded)
-                        {
-                            snapGrab.IsRightHanded = false;
-                            snapGrab.IsLeftHanded = true;
+                            snapGrab.IsLeftHanded = !snapGrab.IsLeftHanded;
+                            snapGrab.IsRightHanded = !snapGrab.IsRightHanded;
                         }
                     }
 
