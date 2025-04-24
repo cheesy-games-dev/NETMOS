@@ -18,7 +18,7 @@
                     "name": "Run",
                     "type": "Button",
                     "id": "d9c9e326-83b0-47dc-9de6-41ff3a8c3155",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -36,7 +36,7 @@
                     "name": "Jump",
                     "type": "Button",
                     "id": "d5c2eebc-c0dc-4a4b-afa9-6ac59f7057a4",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -120,6 +120,17 @@
                 },
                 {
                     "name": "",
+                    "id": "36bcbb8a-f6c4-449b-a086-4902a22de8ce",
+                    "path": "<ViveController>{LeftHand}/trackpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "98ace765-aa69-45cb-ab07-aafd039478d2",
                     "path": "<Keyboard>/shift",
                     "interactions": "",
@@ -133,6 +144,17 @@
                     "name": "",
                     "id": "ab3145ba-27cd-4978-a5df-e911b9e3abb3",
                     "path": "<XRController>{LeftHand}/thumbstickClicked",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ab764bab-a827-4516-b894-a16598a8c629",
+                    "path": "<ViveController>{LeftHand}/trackpadClicked",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -186,6 +208,17 @@
                 },
                 {
                     "name": "",
+                    "id": "6c773cb6-99c8-4f3a-b71d-af692897720c",
+                    "path": "<ViveController>{RightHand}/trackpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "c46e85ed-cab1-4404-ae3b-3ea3ba55e41d",
                     "path": "<Keyboard>/space",
                     "interactions": "",
@@ -199,6 +232,17 @@
                     "name": "",
                     "id": "85141e97-3edc-4c8e-acb5-72f3dba8fe54",
                     "path": "<XRController>{RightHand}/thumbstickClicked",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9e325369-57c7-42b7-aa9c-cc433a7ab8ff",
+                    "path": "<ViveController>{RightHand}/trackpadClicked",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -249,6 +293,17 @@
                     "action": "Turn",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "10ad4e3b-908c-4554-a4ac-8586482375ab",
+                    "path": "<ViveController>{RightHand}/trackpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Turn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -287,7 +342,7 @@
                     "name": "ThumbrestTouched",
                     "type": "Button",
                     "id": "e6f760d8-f8a5-4ff8-9c95-f852d8b1d1d4",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
