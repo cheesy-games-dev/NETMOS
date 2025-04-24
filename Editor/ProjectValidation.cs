@@ -213,21 +213,9 @@ namespace BIMOS.Editor
                         if (!asset)
                             continue;
 
-                        foreach (var renderer in asset.rendererDataList)
-                        {
-                            var features = renderer.rendererFeatures;
-
-                            bool hasDecalFeature = false;
-                            foreach (var feature in features)
-                                if (feature.GetType() == typeof(DecalRendererFeature))
-                                {
-                                    hasDecalFeature = true;
-                                    continue;
-                                }
-
-                            if (!hasDecalFeature)
+                        foreach (var rendererData in asset.rendererDataList)
+                            if (!rendererData.TryGetRendererFeature<DecalRendererFeature>(out _))
                                 return false;
-                        }
                     }
 
                     return true;
@@ -241,34 +229,12 @@ namespace BIMOS.Editor
                         if (!asset)
                             continue;
 
-                        foreach (var renderer in asset.rendererDataList)
+                        foreach (var rendererData in asset.rendererDataList)
                         {
-                            var features = renderer.rendererFeatures;
-
-                            bool hasDecalFeature = false;
-                            foreach (var feature in features)
-                                if (feature.GetType() == typeof(DecalRendererFeature))
-                                {
-                                    hasDecalFeature = true;
-                                    continue;
-                                }
-
-                            if (hasDecalFeature)
+                            if (rendererData.TryGetRendererFeature<DecalRendererFeature>(out _))
                                 continue;
 
-                            var decal = ScriptableObject.CreateInstance<DecalRendererFeature>();
-
-                            AssetDatabase.AddObjectToAsset(decal, asset);
-                            AssetDatabase.SaveAssets();
-
-                            features.Add(decal);
-
-                            renderer
-                              .GetType()
-                              .GetMethod("OnValidate", BindingFlags.Instance|BindingFlags.NonPublic)
-                              .Invoke(renderer, null);
-
-                            EditorUtility.SetDirty(asset);
+                            AddRendererFeature(rendererData, typeof(DecalRendererFeature));
                         }
                     }
                 },
@@ -302,6 +268,43 @@ namespace BIMOS.Editor
             // Delay opening the window since sometimes other settings in the player settings provider redirect to the
             // project validation window causing serialized objects to be nullified.
             EditorApplication.delayCall += () => SettingsService.OpenProjectSettings(_projectValidationSettingsPath);
+        }
+
+        private static void AddRendererFeature(ScriptableRendererData data, Type type)
+        {
+            var serializedObject = new SerializedObject(data);
+
+            var rendererFeaturesProp = serializedObject.FindProperty("m_RendererFeatures");
+            var rendererFeatureMapProp = serializedObject.FindProperty("m_RendererFeatureMap");
+
+            serializedObject.Update();
+
+            var feature = ScriptableObject.CreateInstance(type);
+            feature.name = type.Name;
+            Undo.RegisterCreatedObjectUndo(feature, "Add Renderer Feature");
+
+            // Store this new effect as a sub-asset so we can reference it safely afterwards
+            // Only when we're not dealing with an instantiated asset
+            if (EditorUtility.IsPersistent(data))
+                AssetDatabase.AddObjectToAsset(feature, data);
+
+            AssetDatabase.TryGetGUIDAndLocalFileIdentifier(feature, out _, out long localId);
+
+            // Grow the list first, then add - that's how serialized lists work in Unity
+            rendererFeaturesProp.arraySize++;
+            var componentProp = rendererFeaturesProp.GetArrayElementAtIndex(rendererFeaturesProp.arraySize - 1);
+            componentProp.objectReferenceValue = feature;
+
+            // Update GUID Map
+            rendererFeatureMapProp.arraySize++;
+            var guidProp = rendererFeatureMapProp.GetArrayElementAtIndex(rendererFeatureMapProp.arraySize - 1);
+            guidProp.longValue = localId;
+
+            // Force save / refresh
+            if (EditorUtility.IsPersistent(data))
+                AssetDatabase.SaveAssetIfDirty(data);
+
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }
