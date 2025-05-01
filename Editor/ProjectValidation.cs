@@ -11,7 +11,6 @@ using UnityEngine.XR.OpenXR;
 using UnityEngine.XR.OpenXR.Features.MetaQuestSupport;
 using UnityEngine.XR.OpenXR.Features.Interactions;
 using UnityEngine.Rendering.Universal;
-using System.Reflection;
 
 namespace BIMOS.Editor
 {
@@ -206,7 +205,6 @@ namespace BIMOS.Editor
                 Category = _category,
                 CheckPredicate = () =>
                 {
-                    var property = typeof(ScriptableRenderer).GetProperty("rendererFeatures", BindingFlags.NonPublic | BindingFlags.Instance);
                     for (int currentLevel = 0; currentLevel < QualitySettings.count; currentLevel++)
                     {
                         var asset = QualitySettings.GetRenderPipelineAssetAt(currentLevel) as UniversalRenderPipelineAsset;
@@ -222,7 +220,6 @@ namespace BIMOS.Editor
                 },
                 FixIt = () =>
                 {
-                    var property = typeof(ScriptableRenderer).GetProperty("rendererFeatures", BindingFlags.NonPublic | BindingFlags.Instance);
                     for (int currentLevel = 0; currentLevel < QualitySettings.count; currentLevel++)
                     {
                         var asset = QualitySettings.GetRenderPipelineAssetAt(currentLevel) as UniversalRenderPipelineAsset;
@@ -236,6 +233,52 @@ namespace BIMOS.Editor
 
                             AddRendererFeature(rendererData, typeof(DecalRendererFeature));
                         }
+                    }
+                },
+                FixItAutomatic = true,
+                Error = true
+            },
+            new()
+            {
+                IsRuleEnabled = () => true,
+                Message = "Must enable Adaptive Probe Volumes for Sample Scene",
+                Category = _category,
+                CheckPredicate = () =>
+                {
+                    for (int currentLevel = 0; currentLevel < QualitySettings.count; currentLevel++)
+                    {
+                        var asset = QualitySettings.GetRenderPipelineAssetAt(currentLevel) as UniversalRenderPipelineAsset;
+                        if (!asset)
+                            continue;
+
+                        if (asset.lightProbeSystem != LightProbeSystem.ProbeVolumes)
+                            return false;
+                    }
+
+                    return true;
+                },
+                FixIt = () =>
+                {
+                    for (int currentLevel = 0; currentLevel < QualitySettings.count; currentLevel++)
+                    {
+                        var asset = QualitySettings.GetRenderPipelineAssetAt(currentLevel) as UniversalRenderPipelineAsset;
+                        if (!asset)
+                            continue;
+
+                        if (asset.lightProbeSystem == LightProbeSystem.ProbeVolumes)
+                            continue;
+
+                        var serializedObject = new SerializedObject(asset);
+                        var lightProbeSystemProp = serializedObject.FindProperty("m_LightProbeSystem");
+
+                        Undo.RecordObject(asset, "Modified Light Probe System in " + asset.name);
+                        lightProbeSystemProp.intValue = (int) LightProbeSystem.ProbeVolumes;
+
+                        // Force save / refresh
+                        if (EditorUtility.IsPersistent(asset))
+                            AssetDatabase.SaveAssetIfDirty(asset);
+
+                        serializedObject.ApplyModifiedProperties();
                     }
                 },
                 FixItAutomatic = true,
