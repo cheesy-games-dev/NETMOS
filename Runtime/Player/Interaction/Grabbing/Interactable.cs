@@ -23,9 +23,17 @@ namespace BIMOS
 
         private void Awake() => _grab = GetComponent<Grabbable>();
 
-        private void OnEnable() => _grab.OnRelease += OnRelease;
+        private void OnEnable()
+        {
+            _grab.OnGrab += OnGrab;
+            _grab.OnRelease += OnRelease;
+        }
 
-        private void OnDisable() => _grab.OnRelease -= OnRelease;
+        private void OnDisable()
+        {
+            _grab.OnGrab -= OnGrab;
+            _grab.OnRelease -= OnRelease;
+        }
 
         private void CheckInputs(out float trigger, out bool primary, out bool secondary)
         {

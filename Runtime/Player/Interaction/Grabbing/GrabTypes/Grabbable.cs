@@ -83,9 +83,6 @@ namespace BIMOS
                     grab.enabled = false;
             }
 
-            if (TryGetComponent<Interactable>(out var interactable))
-                interactable.OnRelease();
-
             OnGrab?.Invoke();
         }
 
@@ -142,9 +139,6 @@ namespace BIMOS
                         grab.enabled = true;
                 }
             }
-
-            if (TryGetComponent<Interactable>(out var interactable))
-                interactable.OnRelease();
 
             hand.CurrentGrab = null;
 

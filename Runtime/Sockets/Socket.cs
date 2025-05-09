@@ -1,7 +1,9 @@
 using System.Collections;
+using System.Net.Sockets;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEngine.GraphicsBuffer;
 
 namespace BIMOS
 {
@@ -18,7 +20,7 @@ namespace BIMOS
         public Attacher Attacher;
 
         [HideInInspector]
-        public FixedJoint AttachJoint;
+        public ConfigurableJoint AttachJoint;
 
         [SerializeField]
         private AudioVarianceData _attachSounds, _detachSounds;
@@ -27,7 +29,7 @@ namespace BIMOS
         private UnityEvent AttachEvent, DetachEvent; 
 
         private bool _onCooldown;
-        private float _cooldownTime;
+        private readonly float _cooldownTime = 0.1f;
         private bool _waitingForDetach;
         private AudioSource _audioSource;
 
@@ -108,34 +110,41 @@ namespace BIMOS
         {
             float elapsedTime = 0f;
             var attacher = Attacher.transform;
-            Attacher.Rigidbody.isKinematic = true;
+
+            var rotation = Attacher.Rigidbody.transform.rotation;
+            Attacher.Rigidbody.transform.rotation = DetachPoint.rotation * Quaternion.Inverse(attacher.localRotation);
+
+            AttachJoint = Attacher.Rigidbody.gameObject.AddComponent<ConfigurableJoint>();
+            AttachJoint.xMotion
+               = AttachJoint.yMotion
+               = AttachJoint.zMotion
+               = ConfigurableJointMotion.Locked;
+            AttachJoint.rotationDriveMode = RotationDriveMode.Slerp;
+            AttachJoint.slerpDrive = new() { positionSpring = Mathf.Infinity, maximumForce = Mathf.Infinity };
+            if (_rigidBody)
+                AttachJoint.connectedBody = _rigidBody;
+            if (_articulationBody)
+                AttachJoint.connectedArticulationBody = _articulationBody;
+
+            AttachJoint.autoConfigureConnectedAnchor = false;
+            AttachJoint.anchor = attacher.localPosition;
+
+            Attacher.Rigidbody.transform.rotation = rotation;
 
             while (elapsedTime < _insertTime)
             {
                 var targetPosition = Vector3.Lerp(DetachPoint.position, AttachPoint.position, elapsedTime / _insertTime);
                 var targetRotation = Quaternion.Lerp(DetachPoint.rotation, AttachPoint.rotation, elapsedTime / _insertTime);
 
-                Attacher.Rigidbody.Move(
-                    targetPosition - targetRotation * attacher.localPosition,
-                    targetRotation * Quaternion.Inverse(attacher.localRotation)
-                );
+                AttachJoint.connectedAnchor = _body.InverseTransformPoint(targetPosition);
+                AttachJoint.targetRotation = Quaternion.Inverse(targetRotation) * DetachPoint.rotation;
 
                 elapsedTime += Time.fixedDeltaTime;
                 yield return new WaitForFixedUpdate();
             }
 
-            Attacher.Rigidbody.transform.SetPositionAndRotation(
-                AttachPoint.position - AttachPoint.rotation * attacher.localPosition,
-                AttachPoint.rotation * Quaternion.Inverse(attacher.localRotation)
-            );
-
-            AttachJoint = Attacher.Rigidbody.gameObject.AddComponent<FixedJoint>();
-            if (_rigidBody)
-                AttachJoint.connectedBody = _rigidBody;
-            if (_articulationBody)
-                AttachJoint.connectedArticulationBody = _articulationBody;
-
-            Attacher.Rigidbody.isKinematic = false;
+            AttachJoint.connectedAnchor = _body.InverseTransformPoint(AttachPoint.position);
+            AttachJoint.targetRotation = Quaternion.Inverse(AttachPoint.rotation) * DetachPoint.rotation;
 
             _onCooldown = false;
 
@@ -160,8 +169,6 @@ namespace BIMOS
             if (_audioSource && _detachSounds)
                 _audioSource.PlayOneShot(_detachSounds.GetRandomClip());
 
-            Destroy(AttachJoint);
-
             StartCoroutine(DetachCoroutine());
             DetachEvent.Invoke();
             Attacher.Detach();
@@ -171,21 +178,23 @@ namespace BIMOS
         {
             float elapsedTime = 0f;
             var attacher = Attacher.transform;
-            Attacher.Rigidbody.isKinematic = true;
 
             while (elapsedTime < _insertTime)
             {
                 var targetPosition = Vector3.Lerp(AttachPoint.position, DetachPoint.position, elapsedTime / _insertTime);
                 var targetRotation = Quaternion.Lerp(AttachPoint.rotation, DetachPoint.rotation, elapsedTime / _insertTime);
 
-                Attacher.Rigidbody.Move(
-                    targetPosition - targetRotation * attacher.localPosition,
-                    targetRotation * Quaternion.Inverse(attacher.localRotation)
-                );
+                AttachJoint.connectedAnchor = _body.InverseTransformPoint(targetPosition);
+                AttachJoint.targetRotation = Quaternion.Inverse(targetRotation) * DetachPoint.rotation;
 
                 elapsedTime += Time.fixedDeltaTime;
                 yield return new WaitForFixedUpdate();
             }
+
+            AttachJoint.connectedAnchor = _body.InverseTransformPoint(DetachPoint.position);
+            AttachJoint.targetRotation = Quaternion.Inverse(DetachPoint.rotation) * DetachPoint.rotation;
+
+            Destroy(AttachJoint);
 
             foreach (Collider attacherCollider in Attacher.Rigidbody.GetComponentsInChildren<Collider>())
                 foreach (Collider socketCollider in _body.GetComponentsInChildren<Collider>())
@@ -204,7 +213,6 @@ namespace BIMOS
                 DetachPoint.rotation * Quaternion.Inverse(attacher.localRotation)
             );
 
-            Attacher.Rigidbody.isKinematic = false;
             Attacher.Rigidbody.linearVelocity += (DetachPoint.position - AttachPoint.position) / _insertTime;
 
             Attacher.Socket = null;
