@@ -220,9 +220,14 @@ namespace BIMOS
             rots[1] = Quaternion.Slerp(rots[1], Quaternion.Slerp(open.MiddleBone, closed.MiddleBone, value), Time.deltaTime * 25f); ;
             rots[2] = Quaternion.Slerp(rots[2], Quaternion.Slerp(open.TipBone, closed.TipBone, value), Time.deltaTime * 25f);
 
-            finger[0].localRotation *= rots[0];
-            finger[1].localRotation *= rots[1];
-            finger[2].localRotation *= rots[2];
+            if (finger[0])
+                finger[0].localRotation *= rots[0];
+
+            if (finger[1])
+                finger[1].localRotation *= rots[1];
+
+            if (finger[2])
+                finger[2].localRotation *= rots[2];
         }
     }
 }

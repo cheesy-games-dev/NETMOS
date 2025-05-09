@@ -14,6 +14,9 @@ using UnityEngine.Rendering.Universal;
 
 namespace BIMOS.Editor
 {
+    /// <summary>
+    /// Throws errors with fix buttons if project is configured incorrectly for BIMOS
+    /// </summary>
     public class ProjectValidation : MonoBehaviour
     {
         private const string _category = "BIMOS";
@@ -194,92 +197,6 @@ namespace BIMOS.Editor
                 FixIt = () =>
                 {
                     SettingsService.OpenProjectSettings("Project/Tags and Layers");
-                },
-                FixItAutomatic = true,
-                Error = true
-            },
-            new()
-            {
-                IsRuleEnabled = () => true,
-                Message = "Must enable the Decal feature in URP asset for bullet holes",
-                Category = _category,
-                CheckPredicate = () =>
-                {
-                    for (int currentLevel = 0; currentLevel < QualitySettings.count; currentLevel++)
-                    {
-                        var asset = QualitySettings.GetRenderPipelineAssetAt(currentLevel) as UniversalRenderPipelineAsset;
-                        if (!asset)
-                            continue;
-
-                        foreach (var rendererData in asset.rendererDataList)
-                            if (!rendererData.TryGetRendererFeature<DecalRendererFeature>(out _))
-                                return false;
-                    }
-
-                    return true;
-                },
-                FixIt = () =>
-                {
-                    for (int currentLevel = 0; currentLevel < QualitySettings.count; currentLevel++)
-                    {
-                        var asset = QualitySettings.GetRenderPipelineAssetAt(currentLevel) as UniversalRenderPipelineAsset;
-                        if (!asset)
-                            continue;
-
-                        foreach (var rendererData in asset.rendererDataList)
-                        {
-                            if (rendererData.TryGetRendererFeature<DecalRendererFeature>(out _))
-                                continue;
-
-                            AddRendererFeature(rendererData, typeof(DecalRendererFeature));
-                        }
-                    }
-                },
-                FixItAutomatic = true,
-                Error = true
-            },
-            new()
-            {
-                IsRuleEnabled = () => true,
-                Message = "Must enable Adaptive Probe Volumes for Sample Scene",
-                Category = _category,
-                CheckPredicate = () =>
-                {
-                    for (int currentLevel = 0; currentLevel < QualitySettings.count; currentLevel++)
-                    {
-                        var asset = QualitySettings.GetRenderPipelineAssetAt(currentLevel) as UniversalRenderPipelineAsset;
-                        if (!asset)
-                            continue;
-
-                        if (asset.lightProbeSystem != LightProbeSystem.ProbeVolumes)
-                            return false;
-                    }
-
-                    return true;
-                },
-                FixIt = () =>
-                {
-                    for (int currentLevel = 0; currentLevel < QualitySettings.count; currentLevel++)
-                    {
-                        var asset = QualitySettings.GetRenderPipelineAssetAt(currentLevel) as UniversalRenderPipelineAsset;
-                        if (!asset)
-                            continue;
-
-                        if (asset.lightProbeSystem == LightProbeSystem.ProbeVolumes)
-                            continue;
-
-                        var serializedObject = new SerializedObject(asset);
-                        var lightProbeSystemProp = serializedObject.FindProperty("m_LightProbeSystem");
-
-                        Undo.RecordObject(asset, "Modified Light Probe System in " + asset.name);
-                        lightProbeSystemProp.intValue = (int) LightProbeSystem.ProbeVolumes;
-
-                        // Force save / refresh
-                        if (EditorUtility.IsPersistent(asset))
-                            AssetDatabase.SaveAssetIfDirty(asset);
-
-                        serializedObject.ApplyModifiedProperties();
-                    }
                 },
                 FixItAutomatic = true,
                 Error = true

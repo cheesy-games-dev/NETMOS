@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -26,6 +27,7 @@ namespace BIMOS
         private UnityEvent AttachEvent, DetachEvent; 
 
         private bool _onCooldown;
+        private float _cooldownTime;
         private bool _waitingForDetach;
         private AudioSource _audioSource;
 
@@ -99,26 +101,41 @@ namespace BIMOS
 
             StartCoroutine(AttachCoroutine());
             AttachEvent.Invoke();
+            Attacher.Attach();
         }
 
         private IEnumerator AttachCoroutine()
         {
             float elapsedTime = 0f;
+            var attacher = Attacher.transform;
+            Attacher.Rigidbody.isKinematic = true;
+
             while (elapsedTime < _insertTime)
             {
-                Vector3 lerpPosition = Vector3.Lerp(DetachPoint.position, AttachPoint.position, elapsedTime / _insertTime);
-                Quaternion lerpRotation = Quaternion.Lerp(DetachPoint.rotation, AttachPoint.rotation, elapsedTime / _insertTime);
-                Attacher.Rigidbody.transform.SetPositionAndRotation(lerpPosition, lerpRotation);
+                var targetPosition = Vector3.Lerp(DetachPoint.position, AttachPoint.position, elapsedTime / _insertTime);
+                var targetRotation = Quaternion.Lerp(DetachPoint.rotation, AttachPoint.rotation, elapsedTime / _insertTime);
+
+                Attacher.Rigidbody.Move(
+                    targetPosition - targetRotation * attacher.localPosition,
+                    targetRotation * Quaternion.Inverse(attacher.localRotation)
+                );
+
                 elapsedTime += Time.fixedDeltaTime;
                 yield return new WaitForFixedUpdate();
             }
-            Attacher.Rigidbody.transform.SetPositionAndRotation(AttachPoint.position, AttachPoint.rotation);
+
+            Attacher.Rigidbody.transform.SetPositionAndRotation(
+                AttachPoint.position - AttachPoint.rotation * attacher.localPosition,
+                AttachPoint.rotation * Quaternion.Inverse(attacher.localRotation)
+            );
 
             AttachJoint = Attacher.Rigidbody.gameObject.AddComponent<FixedJoint>();
             if (_rigidBody)
                 AttachJoint.connectedBody = _rigidBody;
             if (_articulationBody)
                 AttachJoint.connectedArticulationBody = _articulationBody;
+
+            Attacher.Rigidbody.isKinematic = false;
 
             _onCooldown = false;
 
@@ -147,16 +164,25 @@ namespace BIMOS
 
             StartCoroutine(DetachCoroutine());
             DetachEvent.Invoke();
+            Attacher.Detach();
         }
 
         private IEnumerator DetachCoroutine()
         {
             float elapsedTime = 0f;
+            var attacher = Attacher.transform;
+            Attacher.Rigidbody.isKinematic = true;
+
             while (elapsedTime < _insertTime)
             {
-                Vector3 lerpPosition = Vector3.Lerp(AttachPoint.position, DetachPoint.position, elapsedTime / _insertTime);
-                Quaternion lerpRotation = Quaternion.Lerp(AttachPoint.rotation, DetachPoint.rotation, elapsedTime / _insertTime);
-                Attacher.Rigidbody.transform.SetPositionAndRotation(lerpPosition, lerpRotation);
+                var targetPosition = Vector3.Lerp(AttachPoint.position, DetachPoint.position, elapsedTime / _insertTime);
+                var targetRotation = Quaternion.Lerp(AttachPoint.rotation, DetachPoint.rotation, elapsedTime / _insertTime);
+
+                Attacher.Rigidbody.Move(
+                    targetPosition - targetRotation * attacher.localPosition,
+                    targetRotation * Quaternion.Inverse(attacher.localRotation)
+                );
+
                 elapsedTime += Time.fixedDeltaTime;
                 yield return new WaitForFixedUpdate();
             }
@@ -173,11 +199,18 @@ namespace BIMOS
                 if (grab)
                     grab.enabled = true;
 
-            Attacher.Rigidbody.transform.SetPositionAndRotation(DetachPoint.position, DetachPoint.rotation);
+            Attacher.Rigidbody.transform.SetPositionAndRotation(
+                DetachPoint.position - DetachPoint.rotation * attacher.localPosition,
+                DetachPoint.rotation * Quaternion.Inverse(attacher.localRotation)
+            );
+
+            Attacher.Rigidbody.isKinematic = false;
             Attacher.Rigidbody.linearVelocity += (DetachPoint.position - AttachPoint.position) / _insertTime;
 
             Attacher.Socket = null;
             Attacher = null;
+
+            yield return new WaitForSeconds(_cooldownTime);
 
             _onCooldown = false;
         }

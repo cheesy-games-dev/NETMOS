@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace BIMOS
@@ -5,6 +6,10 @@ namespace BIMOS
     [AddComponentMenu("BIMOS/Attacher")]
     public class Attacher : MonoBehaviour
     {
+        public event Action
+            OnAttach,
+            OnDetach;
+
         public string[] Tags;
 
         public Grabbable[] EnableGrabs, DisableGrabs;
@@ -26,12 +31,17 @@ namespace BIMOS
             return false;
         }
 
+        public void Attach() => OnAttach?.Invoke();
+
+        public void Detach() => OnDetach?.Invoke();
+
         public void AttemptDetach()
         {
             if (!Socket)
                 return;
 
             Socket.Detach();
+            OnDetach?.Invoke();
         }
     }
 }

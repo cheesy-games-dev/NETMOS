@@ -15,9 +15,9 @@ namespace BIMOS
         [HideInInspector]
         public Hand LeftHand, RightHand;
 
-        private Rigidbody _rigidBody;
-        private ArticulationBody _articulationBody;
-        private Transform _body;
+        protected Rigidbody _rigidBody;
+        protected ArticulationBody _articulationBody;
+        protected Transform _body;
 
         [HideInInspector]
         public Collider Collider;

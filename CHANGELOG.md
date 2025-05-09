@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this package will be documented in this file.
 
-## [1.1.0] - XX/04/2025
+## [1.1.0] - XX/05/2025
 
 ### BIMOS
 - Added custom avatars
@@ -23,6 +23,8 @@ All notable changes to this package will be documented in this file.
 - Added basic holster/body slot support
 - Added roomscale crouching
 - Moved body colliders back so they more accurately reflect where the avatar's body is
+- Added socket attacher cooldown
+- Hands now follow attacher as it's inserted into a socket
 
 ### Samples
 - Created a full modular gun system

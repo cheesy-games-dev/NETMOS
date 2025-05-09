@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -52,20 +53,19 @@ namespace BIMOS
             primary = leftPrimary || rightPrimary;
             secondary = leftSecondary || rightSecondary;
         }
+
         public void Tick()
         {
-            float trigger;
-            bool primary, secondary;
-            CheckInputs(out trigger, out primary, out secondary);
+            CheckInputs(out float trigger, out bool primary, out bool secondary);
             OnTick.Invoke(trigger, primary, secondary);
         }
+
         public void PhysicsTick()
         {
-            float trigger;
-            bool primary, secondary;
-            CheckInputs(out trigger, out primary, out secondary);
+            CheckInputs(out float trigger, out bool primary, out bool secondary);
             OnPhysicsTick.Invoke(trigger, primary, secondary);
         }
+
         public void OnTrigger(bool isButtonDown)
         {
             if (isButtonDown)
@@ -73,6 +73,7 @@ namespace BIMOS
             else
                 TriggerUpEvent.Invoke();
         }
+
         public void OnPrimary(bool isButtonDown)
         {
             if (isButtonDown)
@@ -80,6 +81,7 @@ namespace BIMOS
             else
                 PrimaryUpEvent.Invoke();
         }
+
         public void OnSecondary(bool isButtonDown)
         {
             if (isButtonDown)
@@ -87,16 +89,12 @@ namespace BIMOS
             else
                 SecondaryUpEvent.Invoke();
         }
-        public void OnGrab()
-        {
-            GrabEvent.Invoke();
-        }
-        public void OnRelease()
-        {
-            ReleaseEvent.Invoke();
-        }
 
-        [System.Serializable]
+        public void OnGrab() => GrabEvent.Invoke();
+
+        public void OnRelease() => ReleaseEvent.Invoke();
+
+        [Serializable]
         public class TickEvent : UnityEvent<float, bool, bool> { }
     }
 }

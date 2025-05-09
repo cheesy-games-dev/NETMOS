@@ -520,19 +520,28 @@ namespace BIMOS
             _selectedBoneRenderer.transforms = bones.ToArray();
         }
 
-        private void FingerPoseToDummy(FingerPose fingerPose, Transform rootTransform, Quaternion[] initialFingerData)
+        private void FingerPoseToDummy(FingerPose fingerPose, Transform root, Quaternion[] initialFingerData)
         {
             if (_currentHand == _leftHand)
                 fingerPose = fingerPose.Mirrored();
 
-            Transform root = rootTransform;
-            Transform middle = root.GetChild(0);
-            Transform tip = middle.GetChild(0);
+            Transform middle = null, tip = null;
+
+            if (root)
+                middle = root.GetChild(0);
+
+            if (middle)
+                tip = middle.GetChild(0);
 
             //Sets dummy finger bone rotations to those in the fingerPose
-            root.localRotation = initialFingerData[0] * fingerPose.RootBone;
-            middle.localRotation = initialFingerData[1] * fingerPose.MiddleBone;
-            tip.localRotation = initialFingerData[2] * fingerPose.TipBone;
+            if (root)
+                root.localRotation = initialFingerData[0] * fingerPose.RootBone;
+
+            if (middle)
+                middle.localRotation = initialFingerData[1] * fingerPose.MiddleBone;
+
+            if (tip)
+                tip.localRotation = initialFingerData[2] * fingerPose.TipBone;
         }
 
         private HandPose DummyToHandPose()
@@ -599,13 +608,16 @@ namespace BIMOS
             return handPose;
         }
 
-        private FingerPose DummyToFingerPose(Transform rootTransform, Quaternion[] initialFingerData)
+        private FingerPose DummyToFingerPose(Transform root, Quaternion[] initialFingerData)
         {
-            FingerPose fingerPose = new FingerPose();
+            FingerPose fingerPose = new();
+            Transform middle = null, tip = null;
 
-            Transform root = rootTransform;
-            Transform middle = root.GetChild(0);
-            Transform tip = middle.GetChild(0);
+            if (root)
+                middle = root.GetChild(0);
+
+            if (middle)
+                tip = middle.GetChild(0);
 
             fingerPose.RootBone = Quaternion.Inverse(initialFingerData[0]) * root.localRotation;
             fingerPose.MiddleBone = Quaternion.Inverse(initialFingerData[1]) * middle.localRotation;
