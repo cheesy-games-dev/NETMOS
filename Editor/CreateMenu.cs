@@ -1,7 +1,9 @@
+using KadenZombie8.BIMOS.Rig;
+using KadenZombie8.BIMOS.Sockets;
 using UnityEditor;
 using UnityEngine;
 
-namespace BIMOS
+namespace KadenZombie8.BIMOS.Samples.Editor
 {
     public class CreateMenu : MonoBehaviour
     {

@@ -1,14 +1,16 @@
+using KadenZombie8.BIMOS.Rig;
+using System;
 using System.Collections;
-using System.Net.Sockets;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Events;
-using static UnityEngine.GraphicsBuffer;
 
-namespace BIMOS
+namespace KadenZombie8.BIMOS.Sockets
 {
     public class Socket : MonoBehaviour
     {
+        public event Action
+            OnAttach,
+            OnDetach;
+
         public string[] Tags;
 
         public Transform AttachPoint, DetachPoint;
@@ -21,12 +23,6 @@ namespace BIMOS
 
         [HideInInspector]
         public ConfigurableJoint AttachJoint;
-
-        [SerializeField]
-        private AudioVarianceData _attachSounds, _detachSounds;
-
-        [SerializeField]
-        private UnityEvent AttachEvent, DetachEvent; 
 
         private bool _onCooldown;
         private readonly float _cooldownTime = 0.1f;
@@ -98,11 +94,8 @@ namespace BIMOS
                 if (grab)
                     grab.enabled = false;
 
-            if (_audioSource && _attachSounds)
-                _audioSource.PlayOneShot(_attachSounds.GetRandomClip());
-
             StartCoroutine(AttachCoroutine());
-            AttachEvent.Invoke();
+            OnAttach?.Invoke();
             Attacher.Attach();
         }
 
@@ -166,11 +159,8 @@ namespace BIMOS
 
             _onCooldown = true;
 
-            if (_audioSource && _detachSounds)
-                _audioSource.PlayOneShot(_detachSounds.GetRandomClip());
-
             StartCoroutine(DetachCoroutine());
-            DetachEvent.Invoke();
+            OnDetach?.Invoke();
             Attacher.Detach();
         }
 

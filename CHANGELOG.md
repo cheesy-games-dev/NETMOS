@@ -15,6 +15,7 @@ All notable changes to this package will be documented in this file.
   - Made editor more intuitive by highlighting the currently used sub-pose
 - Changed tracked pose drivers to use OpenXR's "palm pose"
   - Added the "Palm Pose Emulator" from BIPED for standalone
+- Sounds now use Audio Random Containers
 - Attachers detaching from sockets now keep their detach animation velocity
 - Grabs are now called grabbables (for more consistent naming with interactables)
 - Fixed issue where seated magazines would be counted, disallowing further summoning

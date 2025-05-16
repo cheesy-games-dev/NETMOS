@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using KadenZombie8.BIMOS.Rig;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
-namespace BIMOS
+namespace KadenZombie8.BIMOS.Editor
 {
     // Monolithic class - I'm so sorry
     public class HandPoseEditor : EditorWindow

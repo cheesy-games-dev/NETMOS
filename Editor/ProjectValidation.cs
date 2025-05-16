@@ -12,7 +12,7 @@ using UnityEngine.XR.OpenXR.Features.MetaQuestSupport;
 using UnityEngine.XR.OpenXR.Features.Interactions;
 using UnityEngine.Rendering.Universal;
 
-namespace BIMOS.Editor
+namespace KadenZombie8.BIMOS.Editor
 {
     /// <summary>
     /// Throws errors with fix buttons if project is configured incorrectly for BIMOS

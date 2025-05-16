@@ -1,7 +1,8 @@
 using System;
+using KadenZombie8.BIMOS.Rig;
 using UnityEngine;
 
-namespace BIMOS
+namespace KadenZombie8.BIMOS.Sockets
 {
     [AddComponentMenu("BIMOS/Attacher")]
     public class Attacher : MonoBehaviour

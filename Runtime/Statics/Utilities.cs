@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BIMOS
+namespace KadenZombie8
 {
     public static class Utilities
     {

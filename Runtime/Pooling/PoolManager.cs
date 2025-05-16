@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BIMOS
+namespace KadenZombie8.Pooling
 {
     public class PoolManager : MonoBehaviour
     {
