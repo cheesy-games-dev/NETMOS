@@ -4,6 +4,7 @@ using UnityEngine.Audio;
 
 namespace KadenZombie8.BIMOS.Rig
 {
+    [RequireComponent(typeof(GrabHandler))]
     public class GrabSoundPlayer : SoundPlayer
     {
         [SerializeField]
@@ -13,7 +14,11 @@ namespace KadenZombie8.BIMOS.Rig
 
         private GrabHandler _grabHandler;
 
-        private void Awake() => _grabHandler = GetComponent<GrabHandler>();
+        protected override void Awake()
+        {
+            base.Awake();
+            _grabHandler = GetComponent<GrabHandler>();
+        }
 
         private void OnEnable()
         {

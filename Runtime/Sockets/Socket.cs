@@ -27,17 +27,14 @@ namespace KadenZombie8.BIMOS.Sockets
         private bool _onCooldown;
         private readonly float _cooldownTime = 0.1f;
         private bool _waitingForDetach;
-        private AudioSource _audioSource;
+        private readonly float _maxAlignTime = 0.25f;
+        private readonly float _maxPositionDifference = 0.1f;
 
         private Rigidbody _rigidBody;
         private ArticulationBody _articulationBody;
         private Transform _body;
 
-        private void Awake()
-        {
-            _body = Utilities.GetBody(transform, out _rigidBody, out _articulationBody);
-            _audioSource = GetComponent<AudioSource>();
-        }
+        private void Awake() => _body = Utilities.GetBody(transform, out _rigidBody, out _articulationBody);
 
         private bool HasMatchingTag(Attacher attacher)
         {
@@ -95,13 +92,10 @@ namespace KadenZombie8.BIMOS.Sockets
                     grab.enabled = false;
 
             StartCoroutine(AttachCoroutine());
-            OnAttach?.Invoke();
-            Attacher.Attach();
         }
 
         private IEnumerator AttachCoroutine()
         {
-            float elapsedTime = 0f;
             var attacher = Attacher.transform;
 
             var rotation = Attacher.Rigidbody.transform.rotation;
@@ -124,6 +118,34 @@ namespace KadenZombie8.BIMOS.Sockets
 
             Attacher.Rigidbody.transform.rotation = rotation;
 
+            attacher.GetPositionAndRotation(out var initialPosition, out var initialRotation);
+            var initialLocalPosition = _body.InverseTransformPoint(initialPosition);
+            var initialLocalRotation = Quaternion.Inverse(_body.rotation) * initialRotation;
+
+            var elapsedTime = 0f;
+            var positionDifference = Mathf.Min(
+                Vector3.Distance(initialPosition, DetachPoint.position),_maxPositionDifference)
+                / _maxPositionDifference;
+            var rotationDifference = (-Quaternion.Dot(initialRotation, DetachPoint.rotation) + 1f) / 2f;
+            var averageDifference = (positionDifference + rotationDifference) / 2f;
+            var alignTime = _maxAlignTime * averageDifference;
+            while (elapsedTime < alignTime)
+            {
+                var initialWorldPosition = _body.TransformPoint(initialLocalPosition);
+                var initialWorldRotation = _body.rotation * initialLocalRotation;
+                var targetPosition = Vector3.Lerp(initialWorldPosition, DetachPoint.position, elapsedTime / alignTime);
+                var targetRotation = Quaternion.Lerp(initialWorldRotation, DetachPoint.rotation, elapsedTime / alignTime);
+
+                AttachJoint.connectedAnchor = _body.InverseTransformPoint(targetPosition);
+                AttachJoint.targetRotation = Quaternion.Inverse(targetRotation) * DetachPoint.rotation;
+
+                elapsedTime += Time.fixedDeltaTime;
+                yield return new WaitForFixedUpdate();
+            }
+
+            OnAttach?.Invoke();
+            Attacher.Attach();
+            elapsedTime = 0f;
             while (elapsedTime < _insertTime)
             {
                 var targetPosition = Vector3.Lerp(DetachPoint.position, AttachPoint.position, elapsedTime / _insertTime);

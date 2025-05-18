@@ -4,7 +4,6 @@ using UnityEngine.Audio;
 
 namespace KadenZombie8.BIMOS.Rig
 {
-    [RequireComponent(typeof(Feet))]
     public class FeetSoundPlayer : SoundPlayer
     {
         [SerializeField]
@@ -12,12 +11,15 @@ namespace KadenZombie8.BIMOS.Rig
             _walkSound,
             _runSound;
 
-        private SmoothLocomotion _smoothLocomotion;
         private Feet _feet;
+        private SmoothLocomotion _smoothLocomotion;
 
-        private void Awake() => _feet = GetComponent<Feet>();
-
-        private void Start() => _smoothLocomotion = BIMOSRig.Instance.PhysicsRig.SmoothLocomotion;
+        protected override void Awake()
+        {
+            base.Awake();
+            _feet = BIMOSRig.Instance.AnimationRig.Feet;
+            _smoothLocomotion = BIMOSRig.Instance.PhysicsRig.SmoothLocomotion;
+        }
 
         private void OnEnable() => _feet.OnStep += Stepped;
 

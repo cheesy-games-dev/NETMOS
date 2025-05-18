@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace KadenZombie8.BIMOS.Rig
 {
+    [DefaultExecutionOrder(-1)]
     public class BIMOSRig : MonoBehaviour
     {
         public static BIMOSRig Instance { get; private set; }

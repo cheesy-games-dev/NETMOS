@@ -15,7 +15,11 @@ namespace KadenZombie8.BIMOS.Guns
 
         private Socket _socket;
 
-        private void Awake() => _socket = GetComponent<Socket>();
+        protected override void Awake()
+        {
+            base.Awake();
+            _socket = GetComponent<Socket>();
+        }
 
         private void OnEnable()
         {
