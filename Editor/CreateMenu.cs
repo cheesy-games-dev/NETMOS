@@ -1,4 +1,5 @@
 using KadenZombie8.BIMOS.Rig;
+using KadenZombie8.BIMOS.Rig.Spawning;
 using KadenZombie8.BIMOS.Sockets;
 using UnityEditor;
 using UnityEngine;

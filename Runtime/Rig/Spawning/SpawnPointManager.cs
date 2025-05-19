@@ -1,21 +1,20 @@
+using System;
 using UnityEngine;
 
-namespace KadenZombie8.BIMOS.Rig
+namespace KadenZombie8.BIMOS.Rig.Spawning
 {
+    /// <summary>
+    /// Manages the current spawn point and respawning the player
+    /// </summary>
     public class SpawnPointManager : MonoBehaviour
     {
         public static SpawnPointManager Instance { get; private set; }
 
+        public event Action OnRespawn;
+
         public SpawnPoint SpawnPoint;
-        public GameObject PlayerInstance;
-
-        [Tooltip("Inserts this prefab in front of player on respawn")]
-        public GameObject StarterProp;
-
-        public Vector3 StarterPropOffset = new Vector3(0, 1f, 1f);
 
         private BIMOSRig _player;
-        private GameObject _starterPropInstance;
 
         private void Awake()
         {
@@ -41,23 +40,13 @@ namespace KadenZombie8.BIMOS.Rig
 
         private void Start() => Respawn();
 
-        public void SetStarterPropOffsetX(float x) => StarterPropOffset.x = x;
-
-        public void SetStarterPropOffsetY(float y) => StarterPropOffset.y = y;
-
-        public void SetStarterPropOffsetZ(float z) => StarterPropOffset.z = z;
-
         public void SetSpawnPoint(SpawnPoint spawnPoint) => SpawnPoint = spawnPoint;
-
-        public void SetStarterProp(GameObject starterProp) => StarterProp = starterProp;
 
         public void Respawn()
         {
             TeleportToSpawnPoint(SpawnPoint.transform);
 
-            Destroy(_starterPropInstance);
-            if (StarterProp)
-                _starterPropInstance = Instantiate(StarterProp, SpawnPoint.transform.TransformPoint(StarterPropOffset), SpawnPoint.transform.rotation);
+            OnRespawn?.Invoke();
         }
 
         private void TeleportToSpawnPoint(Transform spawnPoint)

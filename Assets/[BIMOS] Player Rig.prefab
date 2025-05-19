@@ -7475,7 +7475,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: BIMOS 1.0.0 (05/12/24)
+  m_Text: BIMOS 2.0.0 (19/05/25)
 --- !u!1 &4241932017865567293
 GameObject:
   m_ObjectHideFlags: 0
@@ -7816,7 +7816,7 @@ GameObject:
   - component: {fileID: 3388496932470594253}
   - component: {fileID: 2934317708474495497}
   m_Layer: 0
-  m_Name: Copyright
+  m_Name: Author
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7882,7 +7882,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: KadenZombie8 2024
+  m_Text: KadenZombie8 2025
 --- !u!1 &4352211229855908666
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace KadenZombie8.BIMOS.Rig
+namespace KadenZombie8.BIMOS.Rig.Spawning
 {
     public class SpawnPoint : MonoBehaviour
     {
