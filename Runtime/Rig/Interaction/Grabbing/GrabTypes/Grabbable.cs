@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.XR;
 
 namespace KadenZombie8.BIMOS.Rig
 {
@@ -105,12 +104,17 @@ namespace KadenZombie8.BIMOS.Rig
 
         private IEnumerator CreateGrabJoint(Hand hand, Vector3 position, Quaternion rotation)
         {
-            var tempRotation = hand.PhysicsHandTransform.rotation;
+            hand.transform.GetPositionAndRotation(out var initialPosition, out var initialRotation);
 
-            hand.PhysicsHandTransform.rotation = rotation;
-            //hand.PhysicsHandTransform.position = position; // TODO: REMOVE
+            var initialLocalPosition = Body.InverseTransformPoint(initialPosition);
+            var initialLocalRotation = Quaternion.Inverse(initialRotation) * rotation;
+
+            var finalLocalPosition = Body.InverseTransformPoint(position);
+
+            hand.PhysicsHandTransform.SetPositionAndRotation(position, rotation);
             var grabJoint = hand.PhysicsHandTransform.gameObject.AddComponent<ConfigurableJoint>();
-            hand.PhysicsHand.Rigidbody.rotation = tempRotation;
+            hand.PhysicsHand.Rigidbody.position = initialPosition;
+            hand.PhysicsHand.Rigidbody.rotation = initialRotation;
 
             hand.GrabJoint = grabJoint;
 
@@ -130,14 +134,7 @@ namespace KadenZombie8.BIMOS.Rig
             if (ArticulationBody)
                 grabJoint.connectedArticulationBody = ArticulationBody;
 
-            //grabJoint.autoConfigureConnectedAnchor = false;
-            grabJoint.anchor = hand.PalmTransform.localPosition;
-
-            hand.PalmTransform.GetPositionAndRotation(out var initialPosition, out var initialRotation);
-            //var initialLocalPosition = Body.InverseTransformPoint(initialPosition);
-            var initialLocalRotation = Quaternion.Inverse(Body.rotation) * initialRotation;
-            //var targetLocalPosition = transform.InverseTransformPoint(position);
-            var targetLocalRotation = Quaternion.Inverse(Body.rotation) * rotation;
+            grabJoint.autoConfigureConnectedAnchor = false;
 
             var elapsedTime = 0f;
             var positionDifference = Mathf.Min(
@@ -145,32 +142,23 @@ namespace KadenZombie8.BIMOS.Rig
                 / _maxPositionDifference;
             var rotationDifference = (-Quaternion.Dot(initialRotation, rotation) + 1f) / 2f;
             var averageDifference = (positionDifference + rotationDifference) / 2f;
-            var grabTime = 2f; // _maxGrabTime * averageDifference;
+            var grabTime = _maxGrabTime * averageDifference;
             while (elapsedTime < grabTime)
             {
                 if (!grabJoint)
                     yield break;
 
-                //var initialWorldPosition = transform.TransformPoint(initialLocalPosition);
-                var initialWorldRotation = Body.rotation * initialLocalRotation;
-
-                //var targetWorldPosition = transform.TransformPoint(targetLocalPosition);
-                var targetWorldRotation = Body.rotation * targetLocalRotation;
-
-                //var lerpedTargetPosition = Vector3.Lerp(initialWorldPosition, targetWorldPosition, elapsedTime / grabTime);
+                var lerpedTargetPosition = Vector3.Lerp(initialLocalPosition, finalLocalPosition, elapsedTime / grabTime);
                 var lerpedTargetRotation = Quaternion.Lerp(initialLocalRotation, Quaternion.identity, elapsedTime / grabTime);
 
-                //grabJoint.connectedAnchor = transform.InverseTransformPoint(lerpedTargetPosition);
+                grabJoint.connectedAnchor = lerpedTargetPosition;
                 grabJoint.targetRotation = lerpedTargetRotation;
 
                 elapsedTime += Time.fixedDeltaTime;
                 yield return new WaitForFixedUpdate();
             }
-            
-            //var targetWorldPosition2 = transform.TransformPoint(targetLocalPosition);
-            //var targetWorldRotation2 = transform.rotation * targetLocalRotation;
 
-            //grabJoint.connectedAnchor = transform.localPosition;
+            grabJoint.connectedAnchor = finalLocalPosition;
             grabJoint.targetRotation = Quaternion.identity;
 
             yield return null; //TODO: Remove

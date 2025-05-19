@@ -58,6 +58,12 @@ namespace KadenZombie8.BIMOS.Rig.Spawning
                 var offset = rigidbody.position - rootPosition; //Calculates the offset between the locoball and the rigidbody
                 rigidbody.position = spawnPoint.position + offset; //Sets the rigidbody's position
                 rigidbody.transform.position = spawnPoint.position + offset; //Sets the transform's position
+
+                if (rigidbody.isKinematic)
+                    continue;
+
+                rigidbody.linearVelocity = Vector3.zero;
+                rigidbody.angularVelocity = Vector3.zero;
             }
 
             //Update the animation rig's position

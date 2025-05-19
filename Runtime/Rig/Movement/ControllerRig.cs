@@ -67,8 +67,8 @@ namespace KadenZombie8.BIMOS.Rig
         private IEnumerator WaitForMotionControls()
         {
             _headsetDriver = CameraTransform.GetComponent<TrackedPoseDriver>();
-            _leftControllerDriver = LeftPalmTransform.GetComponent<TrackedPoseDriver>();
-            _rightControllerDriver = RightPalmTransform.GetComponent<TrackedPoseDriver>();
+            _leftControllerDriver = LeftControllerTransform.GetComponent<TrackedPoseDriver>();
+            _rightControllerDriver = RightControllerTransform.GetComponent<TrackedPoseDriver>();
 
             _headsetDriver.enabled
                 = _leftControllerDriver.enabled
