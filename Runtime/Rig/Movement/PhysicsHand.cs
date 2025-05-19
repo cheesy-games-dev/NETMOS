@@ -7,19 +7,19 @@ namespace KadenZombie8.BIMOS.Rig
         public Transform Target, Controller;
         public Vector3 TargetOffsetPosition;
         public Quaternion TargetOffsetRotation;
+        public Rigidbody Rigidbody;
 
         private BIMOSRig _player;
 
         private ConfigurableJoint _handJoint;
-        private Rigidbody _rigidbody;
 
         private void Start()
         {
             _player = BIMOSRig.Instance;
 
-            _rigidbody = GetComponent<Rigidbody>();
-            _rigidbody.solverIterations = 60;
-            _rigidbody.solverVelocityIterations = 10;
+            Rigidbody = GetComponent<Rigidbody>();
+            Rigidbody.solverIterations = 60;
+            Rigidbody.solverVelocityIterations = 10;
 
             TargetOffsetRotation = Quaternion.identity;
             _handJoint = GetComponent<ConfigurableJoint>();

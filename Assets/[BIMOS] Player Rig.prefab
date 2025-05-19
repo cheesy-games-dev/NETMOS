@@ -5800,6 +5800,7 @@ MonoBehaviour:
   Controller: {fileID: 8563664812807291384}
   TargetOffsetPosition: {x: 0, y: 0, z: 0}
   TargetOffsetRotation: {x: 0, y: 0, z: 0, w: 0}
+  Rigidbody: {fileID: 0}
 --- !u!114 &1714243675603914674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6618,6 +6619,8 @@ MonoBehaviour:
   CameraOffsetTransform: {fileID: 1663299016445241834}
   CameraTransform: {fileID: 7935699982236817345}
   MenuCameraTransform: {fileID: 7774723414774480165}
+  LeftPalmTransform: {fileID: 302060809740126155}
+  RightPalmTransform: {fileID: 8105584686134532683}
   LeftControllerTransform: {fileID: 6592363549466593726}
   RightControllerTransform: {fileID: 1478771343154856604}
   FloorOffsetTransform: {fileID: 3865986329520126500}
@@ -6891,6 +6894,7 @@ MonoBehaviour:
   Controller: {fileID: 5488886840134976617}
   TargetOffsetPosition: {x: 0, y: 0, z: 0}
   TargetOffsetRotation: {x: 0, y: 0, z: 0, w: 0}
+  Rigidbody: {fileID: 0}
 --- !u!114 &1354081709754906145
 MonoBehaviour:
   m_ObjectHideFlags: 0

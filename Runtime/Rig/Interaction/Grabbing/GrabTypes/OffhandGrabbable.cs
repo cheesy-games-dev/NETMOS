@@ -5,9 +5,9 @@ namespace KadenZombie8.BIMOS.Rig
     [AddComponentMenu("BIMOS/Grabbables/Grabbable (Offhand)")]
     public class OffhandGrabbable : SnapGrabbable
     {
-        public override void AlignHand(Hand hand)
+        public override void AlignHand(Hand hand, out Vector3 position, out Quaternion rotation)
         {
-            base.AlignHand(hand);
+            base.AlignHand(hand, out position, out rotation);
             Transform otherPhysicsHand = hand.otherHand.PhysicsHandTransform;
             hand.PhysicsHand.Target = hand.otherHand.PhysicsHand.Target;
 

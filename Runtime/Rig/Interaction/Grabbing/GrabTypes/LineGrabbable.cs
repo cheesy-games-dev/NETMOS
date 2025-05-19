@@ -26,11 +26,11 @@ namespace KadenZombie8.BIMOS.Rig
             return 3f / Vector3.Distance(handTransform.position, GetNearestPoint(handTransform.position));
         }
 
-        public override void AlignHand(Hand hand)
+        public override void AlignHand(Hand hand, out Vector3 position, out Quaternion rotation)
         {
             Vector3 point = GetNearestPoint(hand.PalmTransform.position);
-            base.AlignHand(hand);
-            hand.PhysicsHandTransform.position += point - transform.position;
+            base.AlignHand(hand, out position, out rotation);
+            position += point - transform.position;
         }
 
         public override void CreateCollider()

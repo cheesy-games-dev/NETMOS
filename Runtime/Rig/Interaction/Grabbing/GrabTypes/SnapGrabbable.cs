@@ -10,12 +10,10 @@ namespace KadenZombie8.BIMOS.Rig
             return base.CalculateRank(handTransform) * 3f;
         }
 
-        public override void AlignHand(Hand hand)
+        public override void AlignHand(Hand hand, out Vector3 position, out Quaternion rotation)
         {
-            hand.PhysicsHandTransform.SetPositionAndRotation(
-                transform.TransformPoint(hand.PalmTransform.InverseTransformPoint(hand.PhysicsHandTransform.position)),
-                transform.rotation * Quaternion.Inverse(hand.PalmTransform.rotation) * hand.PhysicsHandTransform.rotation
-            );
+            position = transform.TransformPoint(hand.PalmTransform.InverseTransformPoint(hand.PhysicsHandTransform.position));
+            rotation = transform.rotation * Quaternion.Inverse(hand.PalmTransform.rotation) * hand.PhysicsHandTransform.rotation;
         }
     }
 }

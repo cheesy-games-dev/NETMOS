@@ -66,16 +66,16 @@ namespace KadenZombie8.BIMOS.Rig
         private void CalculateCurve()
         {
             RaycastHit hitData = new RaycastHit();
-            Vector3 rayStart = _player.ControllerRig.LeftControllerTransform.position; //The start of the mini ray
+            Vector3 rayStart = _player.ControllerRig.LeftPalmTransform.position; //The start of the mini ray
             Vector3 rayEnd; //The end of the mini ray
-            Vector3 rayVelocity = -_player.ControllerRig.LeftControllerTransform.up * _resolution; //The velocity when the ray starts
+            Vector3 rayVelocity = _player.ControllerRig.LeftPalmTransform.up * _resolution; //The velocity when the ray starts
 
             bool hitObject = false;
             bool hitFloor = false;
             _lineRenderer.positionCount = 0;
             for (int i = 0; i < _maxIterations; i++)
             {
-                Ray ray = new Ray(rayStart, rayVelocity);
+                Ray ray = new(rayStart, rayVelocity);
                 rayEnd = rayStart + rayVelocity;
                 _lineRenderer.positionCount++;
                 _lineRenderer.SetPosition(i, rayStart);

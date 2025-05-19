@@ -16,6 +16,8 @@ namespace KadenZombie8.BIMOS.Rig
         public Transform CameraOffsetTransform;
         public Transform CameraTransform;
         public Transform MenuCameraTransform;
+        public Transform LeftPalmTransform;
+        public Transform RightPalmTransform;
         public Transform LeftControllerTransform;
         public Transform RightControllerTransform;
         public Transform FloorOffsetTransform;
@@ -65,8 +67,8 @@ namespace KadenZombie8.BIMOS.Rig
         private IEnumerator WaitForMotionControls()
         {
             _headsetDriver = CameraTransform.GetComponent<TrackedPoseDriver>();
-            _leftControllerDriver = LeftControllerTransform.GetComponent<TrackedPoseDriver>();
-            _rightControllerDriver = RightControllerTransform.GetComponent<TrackedPoseDriver>();
+            _leftControllerDriver = LeftPalmTransform.GetComponent<TrackedPoseDriver>();
+            _rightControllerDriver = RightPalmTransform.GetComponent<TrackedPoseDriver>();
 
             _headsetDriver.enabled
                 = _leftControllerDriver.enabled
