@@ -4,8 +4,7 @@ using UnityEngine;
 
 namespace KadenZombie8.BIMOS.Rig
 {
-    [AddComponentMenu("BIMOS/Grabbables/Grabbable (Basic)")]
-    public class Grabbable : MonoBehaviour
+    public abstract class Grabbable : MonoBehaviour
     {
         public event Action OnGrab;
         public event Action OnRelease;
@@ -23,8 +22,8 @@ namespace KadenZombie8.BIMOS.Rig
         [HideInInspector]
         public Collider Collider;
 
-        private readonly float _maxGrabTime = 1f;
-        private readonly float _maxPositionDifference = 0.1f;
+        private readonly float _maxGrabTime = 0.2f;
+        private readonly float _maxPositionDifference = 0.2f;
 
         private void OnEnable()
         {
@@ -52,12 +51,20 @@ namespace KadenZombie8.BIMOS.Rig
             Collider = collider;
         }
 
-        public virtual float CalculateRank(Transform handTransform) //Returned when in player grab range
+        public virtual float CalculateRank(Hand hand) //Returned when in player grab range
         {
             if (Collider is MeshCollider)
                 return 1f/1000f;
 
-            return 1f / Vector3.Distance(handTransform.position, Collider.ClosestPoint(handTransform.position)); //Reciprocal of distance from hand to grab
+            AlignHand(hand, out var position, out var rotation);
+
+            var positionDifference = Mathf.Min(
+                Vector3.Distance(hand.PalmTransform.position, position), 0.2f)
+                / 0.2f;
+            var rotationDifference = Quaternion.Angle(hand.PalmTransform.rotation, rotation) / 180f;
+            var averageDifference = (positionDifference + rotationDifference * 2f) / 3f;
+
+            return 1f / averageDifference; //Reciprocal of distance from hand to grab
         }
 
         public virtual void Grab(Hand hand) //Triggered when player grabs the grab
@@ -113,14 +120,8 @@ namespace KadenZombie8.BIMOS.Rig
 
             hand.PhysicsHandTransform.SetPositionAndRotation(position, rotation);
             var grabJoint = hand.PhysicsHandTransform.gameObject.AddComponent<ConfigurableJoint>();
-            hand.PhysicsHand.Rigidbody.position = initialPosition;
-            hand.PhysicsHand.Rigidbody.rotation = initialRotation;
 
             hand.GrabJoint = grabJoint;
-
-            //grabJoint.enableCollision = true;
-            //grabJoint.enablePreprocessing = false;
-            //grabJoint.projectionMode = JointProjectionMode.PositionAndRotation;
 
             grabJoint.xMotion
                = grabJoint.yMotion
@@ -134,14 +135,18 @@ namespace KadenZombie8.BIMOS.Rig
             if (ArticulationBody)
                 grabJoint.connectedArticulationBody = ArticulationBody;
 
+            hand.PhysicsHandTransform.SetPositionAndRotation(initialPosition, initialRotation);
             grabJoint.autoConfigureConnectedAnchor = false;
+
+            grabJoint.connectedAnchor = initialLocalPosition;
+            grabJoint.targetRotation = initialLocalRotation;
 
             var elapsedTime = 0f;
             var positionDifference = Mathf.Min(
                 Vector3.Distance(initialPosition, position), _maxPositionDifference)
                 / _maxPositionDifference;
-            var rotationDifference = (-Quaternion.Dot(initialRotation, rotation) + 1f) / 2f;
-            var averageDifference = (positionDifference + rotationDifference) / 2f;
+            var rotationDifference = Quaternion.Angle(initialRotation, rotation) / 180f;
+            var averageDifference = Mathf.Min(positionDifference + rotationDifference, 1f);
             var grabTime = _maxGrabTime * averageDifference;
             while (elapsedTime < grabTime)
             {
@@ -158,10 +163,15 @@ namespace KadenZombie8.BIMOS.Rig
                 yield return new WaitForFixedUpdate();
             }
 
+            if (!grabJoint)
+                yield break;
+
+            grabJoint.enableCollision = true;
+            grabJoint.enablePreprocessing = false;
+            grabJoint.projectionMode = JointProjectionMode.PositionAndRotation;
+
             grabJoint.connectedAnchor = finalLocalPosition;
             grabJoint.targetRotation = Quaternion.identity;
-
-            yield return null; //TODO: Remove
         }
 
         public void Release(Hand hand, bool toggleGrabs) //Triggered when player releases the grab

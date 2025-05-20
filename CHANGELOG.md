@@ -9,6 +9,7 @@ All notable changes to this package will be documented in this file.
   - Grabbing haptics
   - Hand collision haptics
   - Custom haptic events for grabbables
+- Overhauled grabbing system to be soft
 - Added custom project validation rules to allow for rapid setup without a guide
 - Improved hand pose editor
   - Added ability to load custom avatar hands
@@ -26,6 +27,8 @@ All notable changes to this package will be documented in this file.
 - Moved body colliders back so they more accurately reflect where the avatar's body is
 - Added socket attacher cooldown
 - Hands now follow attacher as it's inserted into a socket
+- Added socket attacher alignment animation
+  - Players are rewarded with quicker attachment times if they line them up correctly
 
 ### Samples
 - Created a full modular gun system

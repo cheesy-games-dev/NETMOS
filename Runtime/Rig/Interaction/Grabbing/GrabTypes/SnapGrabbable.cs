@@ -5,10 +5,7 @@ namespace KadenZombie8.BIMOS.Rig
     [AddComponentMenu("BIMOS/Grabbables/Grabbable (Snap)")]
     public class SnapGrabbable : Grabbable
     {
-        public override float CalculateRank(Transform handTransform)
-        {
-            return base.CalculateRank(handTransform) * 3f;
-        }
+        public override float CalculateRank(Hand hand) => base.CalculateRank(hand) * 3f;
 
         public override void AlignHand(Hand hand, out Vector3 position, out Quaternion rotation)
         {

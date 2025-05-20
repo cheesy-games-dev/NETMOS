@@ -124,11 +124,13 @@ namespace KadenZombie8.BIMOS.Sockets
 
             var elapsedTime = 0f;
             var positionDifference = Mathf.Min(
-                Vector3.Distance(initialPosition, DetachPoint.position),_maxPositionDifference)
+                Vector3.Distance(initialPosition, DetachPoint.position), _maxPositionDifference)
                 / _maxPositionDifference;
-            var rotationDifference = (-Quaternion.Dot(initialRotation, DetachPoint.rotation) + 1f) / 2f;
-            var averageDifference = (positionDifference + rotationDifference) / 2f;
-            var alignTime = _maxAlignTime * averageDifference;
+            var rotationDifference = Quaternion.Angle(attacher.rotation, DetachPoint.rotation) / 180f;
+            var averageDifference = Mathf.Min(positionDifference + rotationDifference, 1f);
+            var alignTime = 0f;
+            if (averageDifference > 0.1f)
+                alignTime = _maxAlignTime * (averageDifference - 0.1f) / 0.9f;
             while (elapsedTime < alignTime)
             {
                 var initialWorldPosition = _body.TransformPoint(initialLocalPosition);

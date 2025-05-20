@@ -61,7 +61,7 @@ namespace KadenZombie8.BIMOS.Rig
                 if (!grab || !(grab.IsLeftHanded && _hand.IsLeftHand || grab.IsRightHanded && !_hand.IsLeftHand)) //If grab exists and is for the appropriate hand
                     continue;
 
-                float grabRank = grab.CalculateRank(_hand.PalmTransform);
+                float grabRank = grab.CalculateRank(_hand);
 
                 if (grabRank <= highestRank || grabRank <= 0f)
                     continue;

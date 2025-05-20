@@ -2356,6 +2356,8 @@ MonoBehaviour:
   PelvisHeadColliderJoint: {fileID: 1324710948130200270}
   LeftHandJoint: {fileID: 7352707488692903835}
   RightHandJoint: {fileID: 83577362301115900}
+  LeftGrabHandler: {fileID: 2531710907283994335}
+  RightGrabHandler: {fileID: 3685421060059991317}
   AirAcceleration: 3
   FenderPelvisOffset: 0.55
   RealFenderPelvisOffset: 0.55
@@ -9637,8 +9639,8 @@ Transform:
   m_GameObject: {fileID: 5678407069553842524}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.08}
-  m_LocalScale: {x: 0.16, y: 0.16, z: 0.19999999}
+  m_LocalPosition: {x: 0, y: 0.06, z: 0.08}
+  m_LocalScale: {x: 0.16, y: 0.24, z: 0.19999999}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5949157817692562273}
@@ -9974,8 +9976,8 @@ Transform:
   m_GameObject: {fileID: 5886259652943315156}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.08}
-  m_LocalScale: {x: 0.16, y: 0.16, z: 0.19999999}
+  m_LocalPosition: {x: 0, y: 0.06, z: 0.08}
+  m_LocalScale: {x: 0.16, y: 0.24, z: 0.19999999}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5836866895375934951}
@@ -12294,7 +12296,7 @@ GameObject:
   - component: {fileID: 7344511352665963535}
   - component: {fileID: 1102242974407902754}
   - component: {fileID: 3692678508500652005}
-  - component: {fileID: 4417934736422653864}
+  - component: {fileID: 314857577338577748}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -12391,7 +12393,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4417934736422653864
+--- !u!114 &314857577338577748
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12400,7 +12402,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7552724467385639402}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55207419af583d144b87aecf6b0dbc80, type: 3}
+  m_Script: {fileID: 11500000, guid: 1649ee5a65de2fb4f93f977782842d40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   HandPose: {fileID: 0}

@@ -25,6 +25,10 @@ namespace KadenZombie8.BIMOS.Rig
             LeftHandJoint,
             RightHandJoint;
 
+        public GrabHandler
+            LeftGrabHandler,
+            RightGrabHandler;
+
         public float
             AirAcceleration = 3f,
             FenderPelvisOffset = 0.55f,

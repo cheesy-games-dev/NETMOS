@@ -17,13 +17,13 @@ namespace KadenZombie8.BIMOS.Rig
             _mask = ~LayerMask.GetMask("BIMOSRig");
         }
 
-        public override float CalculateRank(Transform handTransform)
+        public override float CalculateRank(Hand hand)
         {
             if (!_allowHandClipping)
-                if (Physics.OverlapSphere(GetNearestPoint(handTransform.position), 0.01f, _mask, QueryTriggerInteraction.Ignore).Length > 0)
+                if (Physics.OverlapSphere(GetNearestPoint(hand.PalmTransform.position), 0.01f, _mask, QueryTriggerInteraction.Ignore).Length > 0)
                     return 0f;
 
-            return 3f / Vector3.Distance(handTransform.position, GetNearestPoint(handTransform.position));
+            return base.CalculateRank(hand);
         }
 
         public override void AlignHand(Hand hand, out Vector3 position, out Quaternion rotation)
