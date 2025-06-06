@@ -8,7 +8,7 @@ namespace KadenZombie8.BIMOS.Rig
 
         private bool _isTeleporting; //Whether the player is teleporting or not
 
-        private LayerMask mask;
+        private LayerMask _mask;
         private float _gravityConstant = 0.1f, _resolution = 0.5f;
         private int _maxIterations = 20;
 
@@ -19,7 +19,7 @@ namespace KadenZombie8.BIMOS.Rig
         private MeshRenderer _teleportFeetRenderer; //The renderer for the feet
 
         [SerializeField]
-        private Gradient successGradient, failGradient; //The gradient shown when a teleport is/isn't possible
+        private Gradient _successGradient, _failGradient; //The gradient shown when a teleport is/isn't possible
 
         private void Awake()
         {
@@ -28,7 +28,7 @@ namespace KadenZombie8.BIMOS.Rig
 
         private void Start()
         {
-            mask = ~LayerMask.GetMask("BIMOSRig");
+            _mask = ~LayerMask.GetMask("BIMOSRig");
             _lineRenderer = _teleportFeetTransform.GetComponent<LineRenderer>();
             _teleportFeetRenderer = _teleportFeetTransform.Find("Feet").GetComponent<MeshRenderer>();
         }
@@ -90,7 +90,7 @@ namespace KadenZombie8.BIMOS.Rig
                 }
 
                 //Hit - Reached something!
-                if (Physics.Raycast(ray, out hitData, rayVelocity.magnitude, mask, QueryTriggerInteraction.Ignore))
+                if (Physics.Raycast(ray, out hitData, rayVelocity.magnitude, _mask, QueryTriggerInteraction.Ignore))
                 {
                     hitObject = true;
                     //Success criterion: is it a floor? Use hit angle with normal maybe
@@ -116,7 +116,7 @@ namespace KadenZombie8.BIMOS.Rig
                 _teleportFeetRenderer.enabled = true;
 
                 //Draw success ray
-                _lineRenderer.colorGradient = successGradient;
+                _lineRenderer.colorGradient = _successGradient;
                 _teleportFeetTransform.position = hitData.point + hitData.normal * 0.2f;
 
                 Quaternion headYaw = Quaternion.LookRotation(Vector3.Cross(_player.ControllerRig.CameraTransform.right, Vector3.up)); //Gets player direction
@@ -125,7 +125,7 @@ namespace KadenZombie8.BIMOS.Rig
             else
             {
                 //Draw fail ray
-                _lineRenderer.colorGradient = failGradient;
+                _lineRenderer.colorGradient = _failGradient;
                 _teleportFeetRenderer.enabled = false;
             }
         }

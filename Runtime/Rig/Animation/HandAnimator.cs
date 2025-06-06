@@ -35,8 +35,8 @@ namespace KadenZombie8.BIMOS.Rig
             RingRot,
             LittleRot;
 
-        public thumbSubPoses ThumbPose = thumbSubPoses.Idle;
-        public enum thumbSubPoses
+        public ThumbSubPoses ThumbPose = ThumbSubPoses.Idle;
+        public enum ThumbSubPoses
         {
             Idle,
             ThumbrestTouched,
@@ -132,31 +132,31 @@ namespace KadenZombie8.BIMOS.Rig
         {
             if (_handInputReader.SecondaryButton)
             {
-                ThumbPose = thumbSubPoses.SecondaryButton;
+                ThumbPose = ThumbSubPoses.SecondaryButton;
             }
             else if (_handInputReader.PrimaryButton)
             {
-                ThumbPose = thumbSubPoses.PrimaryButton;
+                ThumbPose = ThumbSubPoses.PrimaryButton;
             }
             else if (_handInputReader.SecondaryTouched)
             {
-                ThumbPose = thumbSubPoses.SecondaryTouched;
+                ThumbPose = ThumbSubPoses.SecondaryTouched;
             }
             else if (_handInputReader.PrimaryTouched)
             {
-                ThumbPose = thumbSubPoses.PrimaryTouched;
+                ThumbPose = ThumbSubPoses.PrimaryTouched;
             }
             else if (_handInputReader.ThumbstickTouched)
             {
-                ThumbPose = thumbSubPoses.ThumbstickTouched;
+                ThumbPose = ThumbSubPoses.ThumbstickTouched;
             }
             else if (_handInputReader.ThumbrestTouched)
             {
-                ThumbPose = thumbSubPoses.ThumbrestTouched;
+                ThumbPose = ThumbSubPoses.ThumbrestTouched;
             }
             else
             {
-                ThumbPose = thumbSubPoses.Idle;
+                ThumbPose = ThumbSubPoses.Idle;
             }
 
             IndexCurl = _handInputReader.Trigger;
@@ -170,25 +170,25 @@ namespace KadenZombie8.BIMOS.Rig
         {
             switch (ThumbPose)
             {
-                case thumbSubPoses.Idle:
+                case ThumbSubPoses.Idle:
                     UpdateFinger(Thumb, ThumbRot, 1, HandPose.Thumb.Idle, HandPose.Thumb.Idle);
                     break;
-                case thumbSubPoses.ThumbrestTouched:
+                case ThumbSubPoses.ThumbrestTouched:
                     UpdateFinger(Thumb, ThumbRot, 1, HandPose.Thumb.ThumbrestTouched, HandPose.Thumb.ThumbrestTouched);
                     break;
-                case thumbSubPoses.PrimaryTouched:
+                case ThumbSubPoses.PrimaryTouched:
                     UpdateFinger(Thumb, ThumbRot, 1, HandPose.Thumb.PrimaryTouched, HandPose.Thumb.PrimaryTouched);
                     break;
-                case thumbSubPoses.PrimaryButton:
+                case ThumbSubPoses.PrimaryButton:
                     UpdateFinger(Thumb, ThumbRot, 1, HandPose.Thumb.PrimaryButton, HandPose.Thumb.PrimaryButton);
                     break;
-                case thumbSubPoses.SecondaryTouched:
+                case ThumbSubPoses.SecondaryTouched:
                     UpdateFinger(Thumb, ThumbRot, 1, HandPose.Thumb.SecondaryTouched, HandPose.Thumb.SecondaryTouched);
                     break;
-                case thumbSubPoses.SecondaryButton:
+                case ThumbSubPoses.SecondaryButton:
                     UpdateFinger(Thumb, ThumbRot, 1, HandPose.Thumb.SecondaryButton, HandPose.Thumb.SecondaryButton);
                     break;
-                case thumbSubPoses.ThumbstickTouched:
+                case ThumbSubPoses.ThumbstickTouched:
                     UpdateFinger(Thumb, ThumbRot, 1, HandPose.Thumb.ThumbstickTouched, HandPose.Thumb.ThumbstickTouched);
                     break;
             }

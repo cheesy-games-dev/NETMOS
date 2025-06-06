@@ -1,15 +1,22 @@
+using System;
+using UnityEngine;
+
 namespace KadenZombie8.BIMOS.Core.StateMachine
 {
-    public abstract class BaseState<T> : IState<T> where T : IStateMachine<T>
+    public abstract class BaseState<T> : ScriptableObject, IState<T> where T : IStateMachine<T>
     {
         protected T StateMachine;
 
-        public void Initialize(T stateMachine) => StateMachine = stateMachine;
+        public event Action OnEnter;
+        public event Action OnUpdate;
+        public event Action OnExit;
 
-        public virtual void Enter() { }
+        public void AttachTo(T stateMachine) => StateMachine = stateMachine;
 
-        public virtual void Update () { }
+        public virtual void Enter() => OnEnter?.Invoke();
 
-        public virtual void Exit() { }
+        public virtual void Update () => OnUpdate?.Invoke();
+
+        public virtual void Exit() => OnExit?.Invoke();
     }
 }

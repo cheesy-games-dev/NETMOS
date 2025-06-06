@@ -24,10 +24,10 @@ namespace KadenZombie8.BIMOS.Editor
 
         private const string _openXRLoaderTypeName = "UnityEngine.XR.OpenXR.OpenXRLoader";
 
-        static readonly BuildTargetGroup[] s_BuildTargetGroups =
+        private static readonly BuildTargetGroup[] _buildTargetGroups =
             ((BuildTargetGroup[])Enum.GetValues(typeof(BuildTargetGroup))).Distinct().ToArray();
 
-        static readonly List<BuildValidationRule> s_BuildValidationRules = new()
+        private static readonly List<BuildValidationRule> _buildValidationRules = new()
         {
             new()
             {
@@ -206,8 +206,8 @@ namespace KadenZombie8.BIMOS.Editor
         [InitializeOnLoadMethod]
         static void RegisterProjectValidationRules()
         {
-            foreach (var buildTargetGroup in s_BuildTargetGroups)
-                BuildValidator.AddRules(buildTargetGroup, s_BuildValidationRules);
+            foreach (var buildTargetGroup in _buildTargetGroups)
+                BuildValidator.AddRules(buildTargetGroup, _buildValidationRules);
 
             // Delay evaluating conditions for issues to give time for Package Manager and UPM cache to fully initialize.
             EditorApplication.delayCall += ShowWindowIfIssuesExist;
@@ -215,7 +215,7 @@ namespace KadenZombie8.BIMOS.Editor
 
         static void ShowWindowIfIssuesExist()
         {
-            foreach (var validation in s_BuildValidationRules)
+            foreach (var validation in _buildValidationRules)
                 if (validation.CheckPredicate == null || !validation.CheckPredicate.Invoke())
                 {
                     ShowWindow();
