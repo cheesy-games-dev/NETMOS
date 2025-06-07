@@ -8,8 +8,8 @@ namespace KadenZombie8.BIMOS.Core.StateMachine
         event Action OnUpdate;
         event Action OnExit;
 
-        void Enter();
-        void Update();
-        void Exit();
+        void EnterState();
+        void UpdateState();
+        void ExitState();
     }
 }

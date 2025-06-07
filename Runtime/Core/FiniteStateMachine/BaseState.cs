@@ -11,12 +11,36 @@ namespace KadenZombie8.BIMOS.Core.StateMachine
         public event Action OnUpdate;
         public event Action OnExit;
 
-        public void AttachTo(T stateMachine) => StateMachine = stateMachine;
+        public void ConnectTo(T stateMachine)
+        {
+            StateMachine = stateMachine;
+            Setup();
+        }
 
-        public virtual void Enter() => OnEnter?.Invoke();
+        protected abstract void Setup();
 
-        public virtual void Update () => OnUpdate?.Invoke();
+        public void EnterState()
+        {
+            OnEnter?.Invoke();
+            Enter();
+        }
 
-        public virtual void Exit() => OnExit?.Invoke();
+        public virtual void Enter() { }
+
+        public void UpdateState()
+        {
+            OnUpdate?.Invoke();
+            Update();
+        }
+
+        public virtual void Update() { }
+
+        public void ExitState()
+        {
+            OnExit?.Invoke();
+            Exit();
+        }
+
+        public virtual void Exit() { }
     }
 }

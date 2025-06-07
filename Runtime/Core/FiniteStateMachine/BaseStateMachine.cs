@@ -16,26 +16,42 @@ namespace KadenZombie8.BIMOS.Core.StateMachine
 
         private readonly Dictionary<Type, IState<T>> _stateLookup = new();
 
-        protected virtual void Awake()
+        protected abstract void Setup();
+
+        private void Awake()
         {
+            Setup();
+
             var stateMachine = (T)this;
+
             foreach (var state in States)
             {
-                state.AttachTo(stateMachine);
-                _stateLookup[state.GetType()] = state;
+                var stateInstance = Instantiate(state);
+                stateInstance.ConnectTo(stateMachine);
+                _stateLookup[stateInstance.GetType()] = stateInstance;
             }
 
-            ChangeState(_initialState);
+            if (!_initialState)
+            {
+                Debug.LogError($"{GetType().Name} has no initial state assigned", this);
+                return;
+            }
+
+            var type = _initialState.GetType();
+            if (_stateLookup.TryGetValue(type, out var initialStateInstance))
+                ChangeState(initialStateInstance);
+            else
+                Debug.LogError($"Initial state {_initialState.name} was not found in {GetType().Name}'s states");
         }
 
         public virtual void ChangeState(IState<T> newState)
         {
-            CurrentState?.Exit();
+            CurrentState?.ExitState();
             CurrentState = newState;
-            CurrentState.Enter();
+            CurrentState.EnterState();
         }
 
-        public void SetState<U>() where U : IState<T>
+        public void ChangeState<U>() where U : IState<T>
         {
             var state = GetState<U>();
             if (state != null)
@@ -50,6 +66,6 @@ namespace KadenZombie8.BIMOS.Core.StateMachine
             return null;
         }
 
-        public void UpdateState() => CurrentState.Update();
+        public void UpdateState() => CurrentState?.UpdateState();
     }
 }
