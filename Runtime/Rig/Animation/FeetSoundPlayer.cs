@@ -14,9 +14,8 @@ namespace KadenZombie8.BIMOS.Rig
         private Feet _feet;
         private SmoothLocomotion _smoothLocomotion;
 
-        protected override void Awake()
+        protected override void Setup()
         {
-            base.Awake();
             _feet = BIMOSRig.Instance.AnimationRig.Feet;
             _smoothLocomotion = BIMOSRig.Instance.PhysicsRig.SmoothLocomotion;
         }

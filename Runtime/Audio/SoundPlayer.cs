@@ -6,15 +6,28 @@ namespace KadenZombie8.BIMOS.Audio
     [RequireComponent(typeof(AudioSource))]
     public abstract class SoundPlayer : MonoBehaviour
     {
-        private AudioSource _audioSource;
+        protected AudioSource AudioSource;
 
-        protected virtual void Awake() => _audioSource = GetComponent<AudioSource>();
+        private void Awake()
+        {
+            AudioSource = GetComponent<AudioSource>();
+            Setup();
+        }
 
-        protected void Play() => _audioSource.Play();
+        protected virtual void Setup() { }
+
+        protected void Play() => AudioSource.Play();
 
         protected void Play(AudioResource resource)
         {
-            _audioSource.resource = resource;
+            AudioSource.resource = resource;
+            Play();
+        }
+
+        protected void Play(AudioResource resource, float volume)
+        {
+            AudioSource.resource = resource;
+            AudioSource.volume = volume;
             Play();
         }
     }

@@ -14,9 +14,9 @@ namespace KadenZombie8.BIMOS.Core.StateMachine
 
         protected IState<T> CurrentState { get; private set; }
 
-        private readonly Dictionary<Type, IState<T>> _stateLookup = new();
+        protected readonly Dictionary<Type, IState<T>> StateLookup = new();
 
-        protected abstract void Setup();
+        protected virtual void Setup() { }
 
         private void Awake()
         {
@@ -28,7 +28,7 @@ namespace KadenZombie8.BIMOS.Core.StateMachine
             {
                 var stateInstance = Instantiate(state);
                 stateInstance.ConnectTo(stateMachine);
-                _stateLookup[stateInstance.GetType()] = stateInstance;
+                StateLookup[stateInstance.GetType()] = stateInstance;
             }
 
             if (!_initialState)
@@ -38,7 +38,7 @@ namespace KadenZombie8.BIMOS.Core.StateMachine
             }
 
             var type = _initialState.GetType();
-            if (_stateLookup.TryGetValue(type, out var initialStateInstance))
+            if (StateLookup.TryGetValue(type, out var initialStateInstance))
                 ChangeState(initialStateInstance);
             else
                 Debug.LogError($"Initial state {_initialState.name} was not found in {GetType().Name}'s states");
@@ -60,7 +60,7 @@ namespace KadenZombie8.BIMOS.Core.StateMachine
 
         public IState<T> GetState<U>() where U : IState<T>
         {
-            if (_stateLookup.TryGetValue(typeof(U), out var state))
+            if (StateLookup.TryGetValue(typeof(U), out var state))
                 return state;
 
             return null;

@@ -25,7 +25,7 @@ namespace KadenZombie8.BIMOS.Core.StateMachine
             Enter();
         }
 
-        public virtual void Enter() { }
+        protected virtual void Enter() { }
 
         public void UpdateState()
         {
@@ -33,7 +33,7 @@ namespace KadenZombie8.BIMOS.Core.StateMachine
             Update();
         }
 
-        public virtual void Update() { }
+        protected virtual void Update() { }
 
         public void ExitState()
         {
@@ -41,6 +41,6 @@ namespace KadenZombie8.BIMOS.Core.StateMachine
             Exit();
         }
 
-        public virtual void Exit() { }
+        protected virtual void Exit() { }
     }
 }
