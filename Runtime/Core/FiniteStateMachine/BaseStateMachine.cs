@@ -10,17 +10,19 @@ namespace KadenZombie8.BIMOS.Core.StateMachine
         protected List<BaseState<T>> States;
 
         [SerializeField]
-        private BaseState<T> _initialState;
+        protected BaseState<T> InitialState;
 
         protected IState<T> CurrentState { get; private set; }
 
         protected readonly Dictionary<Type, IState<T>> StateLookup = new();
 
-        protected virtual void Setup() { }
+        protected virtual void OnAwake() { }
+
+        protected virtual void OnStart() { }
 
         private void Awake()
         {
-            Setup();
+            OnAwake();
 
             var stateMachine = (T)this;
 
@@ -28,20 +30,30 @@ namespace KadenZombie8.BIMOS.Core.StateMachine
             {
                 var stateInstance = Instantiate(state);
                 stateInstance.ConnectTo(stateMachine);
+                stateInstance.OnAwake();
                 StateLookup[stateInstance.GetType()] = stateInstance;
             }
 
-            if (!_initialState)
+            if (!InitialState)
             {
                 Debug.LogError($"{GetType().Name} has no initial state assigned", this);
                 return;
             }
 
-            var type = _initialState.GetType();
+            var type = InitialState.GetType();
             if (StateLookup.TryGetValue(type, out var initialStateInstance))
                 ChangeState(initialStateInstance);
             else
-                Debug.LogError($"Initial state {_initialState.name} was not found in {GetType().Name}'s states");
+                Debug.LogError($"Initial state {InitialState.name} was not found in {GetType().Name}'s states", this);
+        }
+
+        private void Start()
+        {
+            foreach (var state in StateLookup)
+            {
+                var baseState = (BaseState<T>)state.Value;
+                baseState.OnStart();
+            }
         }
 
         public virtual void ChangeState(IState<T> newState)
