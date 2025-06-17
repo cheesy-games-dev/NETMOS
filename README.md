@@ -17,3 +17,11 @@
 > ### NETMOS Base is universal and fits for any networking solution/libary
 
 > ### NETMOS Fishy is integrated for [FishNet](https://fish-networking.gitbook.io/docs) and uses [UTP](https://blogcritics.org/wp-content/uploads/2014/06/house-300x225.jpg)
+
+## Comparisons
+
+| Variant | Summary | Emoji |
+| :---         |     :---      |          ---: |
+| Mirror+EOS | Best in Syncing, Latest, Easiest, Fastest, Supported, Free | 🚀 |
+| Fishnet+UTP  | Base Syncing, Easy, Fast, Cost Money(UTP Relay)|💵 |
+| Base | Bad in Syncing, Universal, Oldest, Clunky|🌍|
