@@ -6,6 +6,8 @@
 
 > ### NETMOS is the spirital successor to BIMOS Fishnet
 
+> ### NETMOS includes an updated BIMOS Sample to show how NETMOS would be intergrated
+
 > ### NETMOS IS NOT A NETWORKING SOLUTION OR LIBARY LIKE MIRROR, FISHNET, PHOTON OR RIPTIDE
 
 ## NETMOS Variants
