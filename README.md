@@ -16,4 +16,4 @@
 
 > ### NETMOS Base is universal and fits for any networking solution/libary
 
-> ### Netmos Fishy is integrated for [FishNet](https://fish-networking.gitbook.io/docs) and uses [UTP](https://blogcritics.org/wp-content/uploads/2014/06/house-300x225.jpg)
+> ### NETMOS Fishy is integrated for [FishNet](https://fish-networking.gitbook.io/docs) and uses [UTP](https://blogcritics.org/wp-content/uploads/2014/06/house-300x225.jpg)
