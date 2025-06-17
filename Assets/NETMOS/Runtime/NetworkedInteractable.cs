@@ -8,6 +8,7 @@ namespace  Netmos
     public class NetworkedInteractable : NetworkBehaviour
     {
         [NetVar] public bool isSelected = false;
+        [SerializeField, Tooltip("Stop other players from stealing the interactable when the owner is grabbing it")] private bool stopStealing = false;
         public Interactable interactable;
 
         #region BasicInit
