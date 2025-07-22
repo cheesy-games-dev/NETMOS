@@ -1,9 +1,10 @@
+using Mirror;
 using UnityEngine;
 
 namespace KadenZombie8.BIMOS.Rig.Spawning
 {
-    public class SpawnPoint : MonoBehaviour
+    public class SpawnPoint : NetworkStartPosition
     {
-        private void Awake() => Destroy(transform.GetChild(0).gameObject);
+        private void Start() => Destroy(transform.GetChild(0).gameObject);
     }
 }

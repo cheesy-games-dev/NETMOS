@@ -131,5 +131,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23683c9296d8dc145a5dab91b077a7ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerPrefab: {fileID: 3169780607551956412, guid: 0f6a8eddd3b3f134cba43472c935bf29, type: 3}
-  _placeholder: {fileID: 579784189373798880}
