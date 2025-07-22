@@ -1,11 +1,12 @@
 using System;
+using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace KadenZombie8.BIMOS.Rig
 {
     [AddComponentMenu("BIMOS/Grabbables/Interactable")]
-    public class Interactable : MonoBehaviour
+    public class Interactable : NetworkBehaviour
     {
         public UnityEvent
             TriggerDownEvent,
@@ -65,42 +66,67 @@ namespace KadenZombie8.BIMOS.Rig
         public void Tick()
         {
             CheckInputs(out float trigger, out bool primary, out bool secondary);
-            OnTick.Invoke(trigger, primary, secondary);
+            OnTick?.Invoke(trigger, primary, secondary);
         }
 
         public void PhysicsTick()
         {
             CheckInputs(out float trigger, out bool primary, out bool secondary);
-            OnPhysicsTick.Invoke(trigger, primary, secondary);
+            OnPhysicsTick?.Invoke(trigger, primary, secondary);
         }
 
-        public void OnTrigger(bool isButtonDown)
+        [ServerRpc]
+        public void OnTrigger(bool isButtonDown)=>OnTriggerEvent(isButtonDown);
+
+        [ServerRpc]
+        public void OnPrimary(bool isButtonDown)=>OnPrimaryEvent(isButtonDown);
+       
+
+        [ServerRpc]
+        public void OnSecondary(bool isButtonDown)=>OnSecondaryEvent(isButtonDown);
+        
+        [ServerRpc]
+        public void OnGrab()=>OnGrabEvent();
+
+        [ServerRpc]
+        public void OnRelease()=>OnReleaseEvent();
+
+        [ClientRpc]
+        private void OnTriggerEvent(bool isButtonDown)
         {
             if (isButtonDown)
-                TriggerDownEvent.Invoke();
+                TriggerDownEvent?.Invoke();
             else
-                TriggerUpEvent.Invoke();
+                TriggerUpEvent?.Invoke();
         }
 
-        public void OnPrimary(bool isButtonDown)
+        [ClientRpc]
+        private void OnPrimaryEvent(bool isButtonDown)
         {
             if (isButtonDown)
-                PrimaryDownEvent.Invoke();
+                PrimaryDownEvent?.Invoke();
             else
-                PrimaryUpEvent.Invoke();
+                PrimaryUpEvent?.Invoke();
         }
 
-        public void OnSecondary(bool isButtonDown)
+        [ClientRpc]
+        private void OnSecondaryEvent(bool isButtonDown)
         {
             if (isButtonDown)
-                SecondaryDownEvent.Invoke();
+                SecondaryDownEvent?.Invoke();
             else
-                SecondaryUpEvent.Invoke();
+                SecondaryUpEvent?.Invoke();
         }
-
-        public void OnGrab() => GrabEvent.Invoke();
-
-        public void OnRelease() => ReleaseEvent.Invoke();
+        [ClientRpc]
+        private void OnGrabEvent()
+        {
+            GrabEvent?.Invoke();
+        }
+        [ClientRpc]
+        private void OnReleaseEvent()
+        {
+            ReleaseEvent?.Invoke();
+        }
 
         [Serializable]
         public class TickEvent : UnityEvent<float, bool, bool> { }

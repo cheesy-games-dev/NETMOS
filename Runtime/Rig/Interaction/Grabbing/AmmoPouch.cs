@@ -20,6 +20,7 @@ namespace KadenZombie8.BIMOS.Guns
                 return;
             }
             Instance = this;
+            RequiresAuthority = true;
         }
 
         public override void Grab(Hand hand) //Triggered when player grabs the grab

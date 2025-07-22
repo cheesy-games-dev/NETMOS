@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace KadenZombie8.BIMOS.Rig
 {
-    public abstract class Grabbable : MonoBehaviour
+    public abstract class Grabbable : SharableEntity
     {
         public event Action OnGrab;
         public event Action OnRelease;
@@ -54,7 +54,7 @@ namespace KadenZombie8.BIMOS.Rig
         public virtual float CalculateRank(Hand hand) //Returned when in player grab range
         {
             if (Collider is MeshCollider)
-                return 1f/1000f;
+                return 1f / 1000f;
 
             AlignHand(hand, out var position, out var rotation);
 
@@ -98,6 +98,7 @@ namespace KadenZombie8.BIMOS.Rig
             }
 
             OnGrab?.Invoke();
+            Share();
         }
 
         public virtual void IgnoreCollision(Hand hand, bool ignore)
@@ -208,6 +209,7 @@ namespace KadenZombie8.BIMOS.Rig
                 RightHand = null;
 
             OnRelease?.Invoke();
+            Unshare();
         }
 
         public virtual void DestroyGrabJoint(Hand hand)

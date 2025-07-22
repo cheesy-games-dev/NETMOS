@@ -724,6 +724,7 @@ GameObject:
   - component: {fileID: 7593921603748572140}
   - component: {fileID: 5912897864495200317}
   - component: {fileID: 7824534423279834500}
+  - component: {fileID: 6641814141545169212}
   m_Layer: 0
   m_Name: Head
   m_TagString: Player
@@ -876,6 +877,40 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &6641814141545169212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 836808506141830763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb803efbe62c34d7baece46c9ffebad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 7593921603748572140}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChangeCorrectionMultiplier: 2
+  useFixedUpdate: 0
+  rotationSensitivity: 0.01
+  positionPrecision: 0.01
+  scalePrecision: 0.01
 --- !u!1 &889285692519056120
 GameObject:
   m_ObjectHideFlags: 0
@@ -2077,6 +2112,7 @@ GameObject:
   - component: {fileID: 7260243184966913186}
   - component: {fileID: 7135177025831188540}
   - component: {fileID: 7682671436438210394}
+  - component: {fileID: 3112114509923731805}
   m_Layer: 0
   m_Name: Fender
   m_TagString: Player
@@ -2251,6 +2287,40 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &3112114509923731805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664367711346887771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb803efbe62c34d7baece46c9ffebad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 1473860638985637792}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChangeCorrectionMultiplier: 2
+  useFixedUpdate: 0
+  rotationSensitivity: 0.01
+  positionPrecision: 0.01
+  scalePrecision: 0.01
 --- !u!1 &1665926316004826173
 GameObject:
   m_ObjectHideFlags: 0
@@ -5119,6 +5189,7 @@ GameObject:
   - component: {fileID: 2771187932956860478}
   - component: {fileID: 6671873013947755651}
   - component: {fileID: 2379824094042918529}
+  - component: {fileID: 1556191561433790097}
   m_Layer: 0
   m_Name: '[BIMOS] Player Rig'
   m_TagString: Player
@@ -5159,9 +5230,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c10726e34d95df240bb20ef18e17d122, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   ControllerRig: {fileID: 7251668691989030867}
   PhysicsRig: {fileID: 7597220909626976064}
   AnimationRig: {fileID: 5003449384936182098}
+  DisableForObservers:
+  - {fileID: 8973539169285763374}
+  - {fileID: 2466028264708165212}
+  - {fileID: 8579998657378195073}
 --- !u!114 &2379824094042918529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5175,6 +5253,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _characterModel: {fileID: 919132149155446097, guid: 535200017fa23a046bc700958cf4bc08, type: 3}
+--- !u!114 &1556191561433790097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3169780607551956412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 2782252140
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &3179161603892440961
 GameObject:
   m_ObjectHideFlags: 0
@@ -5634,6 +5729,7 @@ GameObject:
   - component: {fileID: 3685421060059991317}
   - component: {fileID: 5345365301431071427}
   - component: {fileID: 6590687736849649494}
+  - component: {fileID: 5539391955266222098}
   m_Layer: 0
   m_Name: RightHand
   m_TagString: Player
@@ -5954,6 +6050,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _grabSound: {fileID: 6418180475301049370, guid: 3d3b23d0498171a4a843c4c9db653b2f, type: 2}
   _releaseSound: {fileID: 6418180475301049370, guid: 12e38a6b1db7164458ee893ebce788ac, type: 2}
+--- !u!114 &5539391955266222098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3301374950904824340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb803efbe62c34d7baece46c9ffebad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 70422243505131228}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChangeCorrectionMultiplier: 2
+  useFixedUpdate: 0
+  rotationSensitivity: 0.01
+  positionPrecision: 0.01
+  scalePrecision: 0.01
 --- !u!1 &3350385942640091127
 GameObject:
   m_ObjectHideFlags: 0
@@ -6728,6 +6858,7 @@ GameObject:
   - component: {fileID: 2531710907283994335}
   - component: {fileID: 5870694611115305941}
   - component: {fileID: 5423963894524361077}
+  - component: {fileID: 6880643640191000733}
   m_Layer: 0
   m_Name: LeftHand
   m_TagString: Player
@@ -7048,6 +7179,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _grabSound: {fileID: 6418180475301049370, guid: 3d3b23d0498171a4a843c4c9db653b2f, type: 2}
   _releaseSound: {fileID: 6418180475301049370, guid: 12e38a6b1db7164458ee893ebce788ac, type: 2}
+--- !u!114 &6880643640191000733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3812682066745618323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb803efbe62c34d7baece46c9ffebad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 8913552984557658865}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChangeCorrectionMultiplier: 2
+  useFixedUpdate: 0
+  rotationSensitivity: 0.01
+  positionPrecision: 0.01
+  scalePrecision: 0.01
 --- !u!1 &3958947878785360056
 GameObject:
   m_ObjectHideFlags: 0
@@ -7490,6 +7655,7 @@ GameObject:
   - component: {fileID: 4957051833807010433}
   - component: {fileID: 1135809102042792036}
   - component: {fileID: 6363679237249903349}
+  - component: {fileID: 6860054361358853835}
   m_Layer: 0
   m_Name: Pelvis
   m_TagString: Player
@@ -7665,6 +7831,40 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &6860054361358853835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4241932017865567293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb803efbe62c34d7baece46c9ffebad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 7421893572215507080}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChangeCorrectionMultiplier: 2
+  useFixedUpdate: 0
+  rotationSensitivity: 0.01
+  positionPrecision: 0.01
+  scalePrecision: 0.01
 --- !u!1 &4244883470079868434
 GameObject:
   m_ObjectHideFlags: 0
@@ -8297,6 +8497,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffed3ad86871d404d9505fb61434d7e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  OnShare:
+    m_PersistentCalls:
+      m_Calls: []
+  OnUnshare:
+    m_PersistentCalls:
+      m_Calls: []
+  IsShared: 0
   HandPose: {fileID: 0}
   IsLeftHanded: 1
   IsRightHanded: 1
@@ -9694,6 +9904,7 @@ GameObject:
   - component: {fileID: 439607508366064471}
   - component: {fileID: 7911717841115968043}
   - component: {fileID: 1324710948130200270}
+  - component: {fileID: 6592450122932108399}
   m_Layer: 0
   m_Name: HeadCollider
   m_TagString: Player
@@ -9867,6 +10078,40 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &6592450122932108399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5686808845733114095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb803efbe62c34d7baece46c9ffebad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 142293387841925940}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChangeCorrectionMultiplier: 2
+  useFixedUpdate: 0
+  rotationSensitivity: 0.01
+  positionPrecision: 0.01
+  scalePrecision: 0.01
 --- !u!1 &5714997663534681733
 GameObject:
   m_ObjectHideFlags: 0
@@ -10204,6 +10449,7 @@ GameObject:
   - component: {fileID: 5621667738810548354}
   - component: {fileID: 8255524940958050785}
   - component: {fileID: 6570134477579702792}
+  - component: {fileID: 4346925840276956070}
   m_Layer: 0
   m_Name: LocomotionSphere
   m_TagString: Player
@@ -10292,6 +10538,40 @@ MonoBehaviour:
   _maxSlopeAngle: 50
   _highFriction: {fileID: 13400000, guid: e6df68717b9090a4196a01fedd68aaed, type: 2}
   _lowFriction: {fileID: 13400000, guid: eccfe0383277b384688d89b0aeaba3c2, type: 2}
+--- !u!114 &4346925840276956070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6243219939238704304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb803efbe62c34d7baece46c9ffebad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 3412202866690988760}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChangeCorrectionMultiplier: 2
+  useFixedUpdate: 0
+  rotationSensitivity: 0.01
+  positionPrecision: 0.01
+  scalePrecision: 0.01
 --- !u!1 &6293701595349787918
 GameObject:
   m_ObjectHideFlags: 0
@@ -12421,6 +12701,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1649ee5a65de2fb4f93f977782842d40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  OnShare:
+    m_PersistentCalls:
+      m_Calls: []
+  OnUnshare:
+    m_PersistentCalls:
+      m_Calls: []
+  IsShared: 0
   HandPose: {fileID: 0}
   IsLeftHanded: 1
   IsRightHanded: 1
