@@ -13,23 +13,20 @@ namespace KadenZombie8.BIMOS.Rig
         public AnimationRig AnimationRig;
         public GameObject[] DisableForObservers;
 
-        private void Awake()
+        public override void OnStartClient()
         {
-            if (!isLocalPlayer)
+            if (isLocalPlayer) return;
+            ControllerRig.gameObject.SetActive(false);
+            foreach (var obj in DisableForObservers)
             {
-                ControllerRig.gameObject.SetActive(false);
-                foreach (var obj in DisableForObservers)
-                {
-                    if (obj != null)
-                        obj.SetActive(false);
-                }
-                return;
+                if (obj != null)
+                    obj.SetActive(false);
             }
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
+            return;
+        }
+        public override void OnStartLocalPlayer()
+        {
+            base.OnStartLocalPlayer();
             Instance = this;
         }
     }
