@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4850294539657462582}
-  - component: {fileID: 1869770601031704557}
   m_Layer: 0
   m_Name: Spawn Point Manager
   m_TagString: Untagged
@@ -33,19 +32,6 @@ Transform:
   - {fileID: 8785661562156720667}
   m_Father: {fileID: 5289576401250805562}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1869770601031704557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 752374277875949297}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7eab55af28a7bff4b9937f2625954202, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SpawnPoint: {fileID: 3551183557532890213}
 --- !u!1 &2982075419223860710
 GameObject:
   m_ObjectHideFlags: 0
@@ -256,17 +242,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e7ebb596b31bb2543b9fb2c20ef2a791, type: 3}
---- !u!114 &3551183557532890213 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1447936707996946114, guid: e7ebb596b31bb2543b9fb2c20ef2a791, type: 3}
-  m_PrefabInstance: {fileID: 2688732965082282663}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23683c9296d8dc145a5dab91b077a7ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &8785661562156720667 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6682423508632017084, guid: e7ebb596b31bb2543b9fb2c20ef2a791, type: 3}

@@ -7,7 +7,6 @@ public abstract class SharableEntity : NetworkBehaviour
     public bool RequiresAuthority { get; protected set; } = false;
     public UnityEvent OnShare;
     public UnityEvent OnUnshare;
-    public List<ConnectionMotive> RequestingConnections = new();
 
     [SyncVar]
     public bool IsShared;
@@ -16,28 +15,18 @@ public abstract class SharableEntity : NetworkBehaviour
     {
         base.OnStartServer();
 
-        if (!NetworkServer.spawned.ContainsKey(netIdentity.netId)) NetworkServer.Spawn(gameObject);
+        if (netIdentity.netId <= 0) NetworkServer.Spawn(netIdentity.gameObject);
         netIdentity.AssignClientAuthority(NetworkServer.localConnection);
     }
 
-    [Command(requiresAuthority = false)]
+    [ServerRpc]
     public void Share(NetworkConnectionToClient conn = null)
     {
-        if (RequiresAuthority) return;
-        ConnectionMotive connection = new(conn, true);
-        RequestingConnections.Add(connection);
-        if (IsShared)
+        if (IsShared || RequiresAuthority)
             return;
-        RequestingConnections.Remove(connection);
         AssignAuth(conn);
         IsShared = true;
         ShareEvent(true);
-    }
-
-    [Command]
-    protected void Destroy(NetworkIdentity identity)
-    {
-        NetworkServer.Destroy(identity.gameObject);
     }
 
     private void AssignAuth(NetworkConnectionToClient conn)
@@ -52,22 +41,16 @@ public abstract class SharableEntity : NetworkBehaviour
         else OnUnshare?.Invoke();
     }
 
-    [Command(requiresAuthority = false)]
+    [ServerRpc]
     public void Unshare(NetworkConnectionToClient conn = null)
     {
-        if (RequiresAuthority) return;
-        ConnectionMotive connection = new(conn, true);
-        if (RequestingConnections.Contains(connection)) RequestingConnections.Remove(connection);
+        if (RequiresAuthority || !IsShared) return;
         if (!IsShared)
         {
             return;
         }
         IsShared = false;
         ShareEvent(isSharing: false);
-        if (RequestingConnections[0].IsMotive)
-        {
-            AssignAuth(RequestingConnections[0].Connection);
-        }
     }
 }
 public class ServerRpc : CommandAttribute
@@ -75,15 +58,5 @@ public class ServerRpc : CommandAttribute
     public ServerRpc()
     {
         this.requiresAuthority = false;
-    }
-}
-public struct ConnectionMotive
-{
-    public NetworkConnectionToClient Connection;
-    public bool IsMotive;
-    public ConnectionMotive(NetworkConnectionToClient connection, bool isMotive = true)
-    {
-        Connection = connection;
-        IsMotive = isMotive;
     }
 }
