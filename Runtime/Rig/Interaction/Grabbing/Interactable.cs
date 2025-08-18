@@ -75,20 +75,20 @@ namespace KadenZombie8.BIMOS.Rig
             OnPhysicsTick?.Invoke(trigger, primary, secondary);
         }
 
-        [ServerRpc]
+        [Command(requiresAuthority = false)]
         public void OnTrigger(bool isButtonDown)=>OnTriggerEvent(isButtonDown);
 
-        [ServerRpc]
+        [Command(requiresAuthority = false)]
         public void OnPrimary(bool isButtonDown)=>OnPrimaryEvent(isButtonDown);
-       
 
-        [ServerRpc]
+
+        [Command(requiresAuthority = false)]
         public void OnSecondary(bool isButtonDown)=>OnSecondaryEvent(isButtonDown);
-        
-        [ServerRpc]
+
+        [Command(requiresAuthority = false)]
         public void OnGrab()=>OnGrabEvent();
 
-        [ServerRpc]
+        [Command(requiresAuthority = false)]
         public void OnRelease()=>OnReleaseEvent();
 
         [ClientRpc]

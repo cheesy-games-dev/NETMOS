@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
+using Mirror;
 using UnityEngine;
 
 namespace KadenZombie8.BIMOS.Rig
 {
-    public abstract class Grabbable : SharableEntity
+    public abstract class Grabbable : NetworkBehaviour
     {
         public event Action OnGrab;
         public event Action OnRelease;
@@ -24,6 +25,8 @@ namespace KadenZombie8.BIMOS.Rig
 
         protected readonly float MaxGrabTime = 0.2f;
         protected readonly float MaxPositionDifference = 0.2f;
+
+        [SyncVar] public bool isGrabbing = false;
 
         private void OnEnable()
         {
@@ -96,9 +99,20 @@ namespace KadenZombie8.BIMOS.Rig
                 if (grab)
                     grab.enabled = false;
             }
-
+            RequestOwnership();
             OnGrab?.Invoke();
-            Share();
+        }
+
+        [Command(requiresAuthority = false)]
+        private void RequestOwnership(NetworkConnectionToClient sender = null)
+        {
+            if (isGrabbing)
+            {
+                return;
+            }
+            isGrabbing = true;
+            netIdentity.RemoveClientAuthority();
+            netIdentity.AssignClientAuthority(sender);
         }
 
         public virtual void IgnoreCollision(Hand hand, bool ignore)
@@ -207,9 +221,14 @@ namespace KadenZombie8.BIMOS.Rig
                 LeftHand = null;
             else
                 RightHand = null;
-
+            Drop();
             OnRelease?.Invoke();
-            Unshare();
+        }
+
+        [Command(requiresAuthority = false)]
+        private void Drop(NetworkConnectionToClient sender = null)
+        {
+            if (netIdentity.connectionToClient == sender) isGrabbing = false;
         }
 
         public virtual void DestroyGrabJoint(Hand hand)
