@@ -4074,7 +4074,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8500,13 +8500,6 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  OnShare:
-    m_PersistentCalls:
-      m_Calls: []
-  OnUnshare:
-    m_PersistentCalls:
-      m_Calls: []
-  IsShared: 0
   HandPose: {fileID: 0}
   IsLeftHanded: 1
   IsRightHanded: 1
@@ -8515,6 +8508,7 @@ MonoBehaviour:
   LeftHand: {fileID: 0}
   RightHand: {fileID: 0}
   Collider: {fileID: 0}
+  isGrabbing: 0
   AmmoPrefab: {fileID: 0}
 --- !u!54 &1895092773906539588
 Rigidbody:
@@ -12722,13 +12716,6 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  OnShare:
-    m_PersistentCalls:
-      m_Calls: []
-  OnUnshare:
-    m_PersistentCalls:
-      m_Calls: []
-  IsShared: 0
   HandPose: {fileID: 0}
   IsLeftHanded: 1
   IsRightHanded: 1
@@ -12737,6 +12724,7 @@ MonoBehaviour:
   LeftHand: {fileID: 0}
   RightHand: {fileID: 0}
   Collider: {fileID: 0}
+  isGrabbing: 0
 --- !u!1 &7579955193802852363
 GameObject:
   m_ObjectHideFlags: 0
@@ -14501,7 +14489,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
